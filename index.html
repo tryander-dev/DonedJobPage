@@ -5,23 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Пескоструйная обработка кирпича</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       background: #1a1a1a;
       color: #f0f0f0;
       font-family: 'Segoe UI', Arial, sans-serif;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     /* ── HEADER ── */
     header {
       background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      padding: 50px 20px 40px;
+      padding: 40px 20px 32px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -37,30 +34,20 @@
       background: rgba(255,165,0,0.2);
       border: 1px solid rgba(255,165,0,0.5);
       color: #ffa500;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       letter-spacing: 3px;
       text-transform: uppercase;
-      padding: 6px 18px;
+      padding: 5px 16px;
       border-radius: 30px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
     header h1 {
-      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-size: clamp(1.5rem, 5vw, 2.8rem);
       font-weight: 700;
       letter-spacing: 1px;
       line-height: 1.2;
-      margin-bottom: 14px;
     }
-    header h1 span {
-      color: #ffa500;
-    }
-    header p {
-      font-size: 1.05rem;
-      color: #aac;
-      max-width: 580px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
+    header h1 span { color: #ffa500; }
 
     /* ── DIVIDER ── */
     .divider {
@@ -68,7 +55,7 @@
       align-items: center;
       gap: 14px;
       max-width: 900px;
-      margin: 40px auto 0;
+      margin: 32px auto 0;
       padding: 0 20px;
     }
     .divider::before, .divider::after {
@@ -77,48 +64,38 @@
       height: 1px;
       background: linear-gradient(to right, transparent, #ffa500, transparent);
     }
-    .divider span {
-      color: #ffa500;
-      font-size: 1.3rem;
-    }
+    .divider span { color: #ffa500; font-size: 1.2rem; }
 
     /* ── MAIN ── */
     main {
       max-width: 1000px;
       margin: 0 auto;
-      padding: 40px 20px 60px;
+      padding: 32px 16px 60px;
       display: flex;
       flex-direction: column;
-      gap: 60px;
+      gap: 48px;
     }
 
     /* ── SLIDER SECTION ── */
-    .slider-section {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-    .slider-section .section-title {
+    .slider-section { display: flex; flex-direction: column; gap: 14px; }
+    .section-title {
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-weight: 600;
       color: #fff;
     }
-    .slider-section .section-title .icon {
-      width: 36px;
-      height: 36px;
+    .section-title .icon {
+      width: 34px; height: 34px;
       background: linear-gradient(135deg, #ffa500, #ff6b00);
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem;
       flex-shrink: 0;
     }
-    .slider-section .section-title .num {
-      font-size: 0.75rem;
+    .section-title .num {
+      font-size: 0.72rem;
       color: #ffa500;
       background: rgba(255,165,0,0.12);
       border: 1px solid rgba(255,165,0,0.3);
@@ -132,12 +109,12 @@
     .ba-wrapper {
       position: relative;
       width: 100%;
-      border-radius: 14px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
       cursor: ew-resize;
       user-select: none;
-      touch-action: none;
+      /* touch-action handled by JS to prevent page scroll while dragging */
       border: 1px solid #333;
     }
     .ba-wrapper img {
@@ -145,6 +122,7 @@
       width: 100%;
       height: auto;
       pointer-events: none;
+      -webkit-user-drag: none;
     }
     .ba-after {
       position: absolute;
@@ -160,58 +138,70 @@
       position: absolute;
       top: 0; left: 0;
     }
+
     /* Labels */
     .ba-label {
       position: absolute;
-      top: 14px;
-      background: rgba(0,0,0,0.65);
+      top: 12px;
       color: #fff;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      padding: 5px 12px;
+      padding: 5px 10px;
       border-radius: 4px;
       pointer-events: none;
       backdrop-filter: blur(4px);
+      z-index: 5;
     }
-    .ba-label-before { left: 14px;  background: rgba(180,60,0,0.75); }
-    .ba-label-after  { right: 14px; background: rgba(0,140,60,0.75); }
+    .ba-label-before { left: 12px;  background: rgba(180,60,0,0.8); }
+    .ba-label-after  { right: 12px; background: rgba(0,140,60,0.8); }
 
     /* Divider line */
     .ba-divider-line {
       position: absolute;
-      top: 0;
-      left: 50%;
+      top: 0; left: 50%;
       transform: translateX(-50%);
-      width: 3px;
-      height: 100%;
+      width: 3px; height: 100%;
       background: #fff;
       pointer-events: none;
       box-shadow: 0 0 8px rgba(0,0,0,0.5);
+      z-index: 6;
     }
     /* Handle */
     .ba-handle {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 46px;
-      height: 46px;
+      width: 46px; height: 46px;
       background: #fff;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       box-shadow: 0 3px 16px rgba(0,0,0,0.5);
       pointer-events: none;
       z-index: 10;
     }
-    .ba-handle svg {
-      width: 22px;
-      height: 22px;
-      fill: #333;
+    .ba-handle svg { width: 22px; height: 22px; }
+
+    /* Fullscreen button */
+    .ba-fullscreen-btn {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      z-index: 15;
+      width: 36px; height: 36px;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s, transform 0.15s;
+      -webkit-tap-highlight-color: transparent;
     }
+    .ba-fullscreen-btn:hover { background: rgba(255,165,0,0.4); transform: scale(1.08); }
+    .ba-fullscreen-btn:active { transform: scale(0.95); }
+    .ba-fullscreen-btn svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
     /* ── IDLE GUIDE ── */
     .ba-guide {
@@ -221,24 +211,21 @@
       z-index: 20;
       transition: opacity 0.5s ease;
     }
-    .ba-guide.hidden { opacity: 0; }
+    .ba-guide.hidden { opacity: 0; pointer-events: none; }
 
-    /* floating pill label */
     .ba-guide-pill {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -68px);
-      background: rgba(0,0,0,0.62);
+      background: rgba(0,0,0,0.65);
       backdrop-filter: blur(6px);
       border: 1px solid rgba(255,255,255,0.18);
       border-radius: 30px;
       padding: 7px 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      display: flex; align-items: center; gap: 8px;
       color: #fff;
-      font-size: 0.85rem;
+      font-size: 0.83rem;
       font-weight: 600;
       letter-spacing: 0.5px;
       white-space: nowrap;
@@ -246,15 +233,12 @@
     }
     .ba-guide-pill .arrow { font-size: 1rem; }
 
-    /* hand icon that follows the handle */
     .ba-guide-hand {
       position: absolute;
       top: 50%;
-      /* left set by JS */
       transform: translate(-50%, 14px);
-      font-size: 2rem;
+      font-size: 1.9rem;
       filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
-      transition: left 0.05s linear;
       animation: guidePop 0.4s 0.1s cubic-bezier(.34,1.56,.64,1) both;
     }
 
@@ -263,49 +247,134 @@
       to   { opacity: 1; transform: translate(-50%, 14px) scale(1); }
     }
 
+    /* ── FULLSCREEN MODAL ── */
+    .fs-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.97);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .fs-modal.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .fs-topbar {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px 8px;
+      flex-shrink: 0;
+    }
+    .fs-title-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ccc;
+      letter-spacing: 0.5px;
+    }
+    .fs-close-btn {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, transform 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    .fs-close-btn:hover { background: rgba(255,60,60,0.5); transform: scale(1.08); }
+    .fs-close-btn:active { transform: scale(0.92); }
+    .fs-close-btn svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+    .fs-content {
+      flex: 1;
+      width: 100%;
+      max-width: 1200px;
+      padding: 0 16px 16px;
+      display: flex;
+      align-items: center;
+      min-height: 0;
+    }
+
+    /* Modal slider wrapper — keeps aspect ratio */
+    #fs-slider {
+      border-radius: 10px;
+      width: 100%;
+      max-height: calc(100vh - 90px);
+    }
+    #fs-slider img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: calc(100vh - 90px);
+      object-fit: contain;
+    }
+
     /* ── INFO CARDS ── */
     .info-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-top: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
     }
     .info-card {
       background: #222;
       border: 1px solid #333;
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px 12px;
       text-align: center;
       transition: border-color 0.2s;
     }
     .info-card:hover { border-color: #ffa500; }
-    .info-card .ic-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .info-card .ic-icon { font-size: 1.6rem; margin-bottom: 6px; }
     .info-card .ic-label {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: #888;
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: 4px;
     }
-    .info-card .ic-value {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #fff;
-    }
+    .info-card .ic-value { font-size: 0.95rem; font-weight: 600; color: #fff; }
 
     /* ── FOOTER ── */
     footer {
       text-align: center;
-      padding: 24px;
+      padding: 20px;
       border-top: 1px solid #2a2a2a;
       color: #555;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
     }
 
+    /* ── MOBILE ── */
     @media (max-width: 600px) {
-      .ba-handle { width: 36px; height: 36px; }
+      header { padding: 28px 16px 22px; }
+      main { padding: 24px 12px 48px; gap: 36px; }
+      .ba-handle { width: 40px; height: 40px; }
       .ba-handle svg { width: 18px; height: 18px; }
-      .ba-label { font-size: 0.68rem; padding: 4px 8px; }
+      .ba-label { font-size: 0.65rem; padding: 4px 8px; top: 8px; }
+      .ba-label-before { left: 8px; }
+      .ba-label-after  { right: 8px; }
+      .ba-fullscreen-btn { width: 32px; height: 32px; bottom: 8px; right: 8px; }
+      .ba-fullscreen-btn svg { width: 15px; height: 15px; }
+      .ba-guide-pill { font-size: 0.75rem; padding: 5px 14px; transform: translate(-50%, -56px); }
+      .ba-guide-hand { font-size: 1.6rem; }
+      .section-title { font-size: 1rem; }
+      .info-grid { grid-template-columns: repeat(2, 1fr); }
+      .fs-topbar { padding: 10px 12px 6px; }
+    }
+
+    @media (max-width: 380px) {
+      header h1 { font-size: 1.3rem; }
+      .info-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -328,23 +397,19 @@
       <span class="num">01 / 02</span>
     </div>
     <div class="ba-wrapper" id="slider1">
-      <!-- After (base — right side) -->
-      <img src="after-FrontSide.png" alt="После — передняя сторона" id="before-img-1" />
-      <!-- Before (overlay — left side) -->
-      <div class="ba-after" id="after-clip-1">
-        <img src="before-FrontSide.png" alt="До — передняя сторона" id="after-img-1" />
+      <img src="after-FrontSide.png"  alt="После — передняя" id="base-img-1" />
+      <div class="ba-after" id="clip-1">
+        <img src="before-FrontSide.png" alt="До — передняя" id="over-img-1" />
       </div>
-      <!-- Labels -->
       <div class="ba-label ba-label-before">До</div>
       <div class="ba-label ba-label-after">После</div>
-      <!-- Divider -->
       <div class="ba-divider-line" id="line1"></div>
       <div class="ba-handle" id="handle1">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
       </div>
-      <!-- Idle guide -->
+      <button class="ba-fullscreen-btn" data-idx="0" aria-label="На весь экран">
+        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      </button>
       <div class="ba-guide hidden" id="guide1">
         <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
         <div class="ba-guide-hand" id="guide-hand1">👆</div>
@@ -360,21 +425,19 @@
       <span class="num">02 / 02</span>
     </div>
     <div class="ba-wrapper" id="slider2">
-      <!-- After (base — right side) -->
-      <img src="after-BackSide.png" alt="После — задняя сторона" id="before-img-2" />
-      <!-- Before (overlay — left side) -->
-      <div class="ba-after" id="after-clip-2">
-        <img src="before-backSide.png" alt="До — задняя сторона" id="after-img-2" />
+      <img src="after-BackSide.png"  alt="После — задняя" id="base-img-2" />
+      <div class="ba-after" id="clip-2">
+        <img src="before-backSide.png" alt="До — задняя" id="over-img-2" />
       </div>
       <div class="ba-label ba-label-before">До</div>
       <div class="ba-label ba-label-after">После</div>
       <div class="ba-divider-line" id="line2"></div>
       <div class="ba-handle" id="handle2">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
       </div>
-      <!-- Idle guide -->
+      <button class="ba-fullscreen-btn" data-idx="1" aria-label="На весь экран">
+        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      </button>
       <div class="ba-guide hidden" id="guide2">
         <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
         <div class="ba-guide-hand" id="guide-hand2">👆</div>
@@ -402,135 +465,229 @@
     <div class="info-card">
       <div class="ic-icon">📸</div>
       <div class="ic-label">Ракурсы</div>
-      <div class="ic-value">Фасад + тыльная сторона</div>
+      <div class="ic-value">Фасад + тыльная</div>
     </div>
   </div>
 
 </main>
 
-<footer>
-  &copy; 2026 · Пескоструйные работы по кирпичу
-</footer>
+<footer>&copy; 2026 · Пескоструйные работы по кирпичу</footer>
+
+<!-- ── FULLSCREEN MODAL ── -->
+<div class="fs-modal" id="fs-modal" role="dialog" aria-modal="true">
+  <div class="fs-topbar">
+    <span class="fs-title-text" id="fs-modal-title"></span>
+    <button class="fs-close-btn" id="fs-close-btn" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="fs-content">
+    <div class="ba-wrapper" id="fs-slider">
+      <img id="fs-base-img" alt="" />
+      <div class="ba-after" id="fs-clip">
+        <img id="fs-over-img" alt="" />
+      </div>
+      <div class="ba-label ba-label-before">До</div>
+      <div class="ba-label ba-label-after">После</div>
+      <div class="ba-divider-line" id="fs-line"></div>
+      <div class="ba-handle" id="fs-handle">
+        <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-  /* ── Each slider state ── */
-  const sliders = [];
-  let userInteracted = false;
+/* ════════════════════════════════
+   SLIDER FACTORY
+   ════════════════════════════════ */
+const sliders = [];
+let userInteracted = false;
 
-  function initSlider(wrapperId, afterClipId, lineId, handleId, afterImgId, guideId, guideHandId) {
-    const wrapper   = document.getElementById(wrapperId);
-    const afterClip = document.getElementById(afterClipId);
-    const line      = document.getElementById(lineId);
-    const handle    = document.getElementById(handleId);
-    const afterImg  = document.getElementById(afterImgId);
-    const guide     = document.getElementById(guideId);
-    const guideHand = document.getElementById(guideHandId);
+function makeSlider(wrapperId, clipId, lineId, handleId, overImgId, guideId, guideHandId) {
+  const wrapper  = document.getElementById(wrapperId);
+  const clip     = document.getElementById(clipId);
+  const line     = document.getElementById(lineId);
+  const handle   = document.getElementById(handleId);
+  const overImg  = document.getElementById(overImgId);
+  const guide    = guideId    ? document.getElementById(guideId)    : null;
+  const guideHand= guideHandId? document.getElementById(guideHandId): null;
 
-    let active = false;
-    let pos = 50;
+  let active = false;
+  let pos = 50;
 
-    function setPos(pct) {
-      pct = Math.max(2, Math.min(98, pct));
-      pos = pct;
-      afterClip.style.width = pct + '%';
-      line.style.left       = pct + '%';
-      handle.style.left     = pct + '%';
-      afterImg.style.width  = (100 / (pct / 100)) + '%';
-      // sync guide hand with handle
-      if (guideHand) guideHand.style.left = pct + '%';
+  function setPos(pct) {
+    pct = Math.max(2, Math.min(98, pct));
+    pos = pct;
+    clip.style.width    = pct + '%';
+    line.style.left     = pct + '%';
+    handle.style.left   = pct + '%';
+    overImg.style.width = (100 / (pct / 100)) + '%';
+    if (guideHand) guideHand.style.left = pct + '%';
+  }
+
+  function getPct(clientX) {
+    const r = wrapper.getBoundingClientRect();
+    return ((clientX - r.left) / r.width) * 100;
+  }
+
+  function onInteract() {
+    if (!userInteracted) {
+      userInteracted = true;
+      sliders.forEach(s => s.guide && s.guide.classList.add('hidden'));
+      stopIdleAnim();
     }
-
-    function getPercent(clientX) {
-      const rect = wrapper.getBoundingClientRect();
-      return ((clientX - rect.left) / rect.width) * 100;
-    }
-
-    function onInteract() {
-      if (!userInteracted) {
-        userInteracted = true;
-        // hide all guides forever
-        sliders.forEach(s => {
-          s.guide.classList.add('hidden');
-        });
-        stopIdleAnim();
-      }
-    }
-
-    wrapper.addEventListener('mousedown', e => {
-      onInteract();
-      active = true;
-      setPos(getPercent(e.clientX));
-    });
-    window.addEventListener('mousemove', e => { if (active) setPos(getPercent(e.clientX)); });
-    window.addEventListener('mouseup',   () => { active = false; });
-
-    wrapper.addEventListener('touchstart', e => {
-      onInteract();
-      active = true;
-      setPos(getPercent(e.touches[0].clientX));
-    }, { passive: true });
-    window.addEventListener('touchmove', e => { if (active) setPos(getPercent(e.touches[0].clientX)); }, { passive: true });
-    window.addEventListener('touchend',  () => { active = false; });
-
-    setPos(50);
-
-    const state = { setPos, guide, guideHand, getPos: () => pos };
-    sliders.push(state);
-    return state;
   }
 
-  /* ── Idle animation ── */
-  let idleRaf = null;
-  let idleStart = null;
-
-  // Easing: smooth sine wave
-  function easeInOutSine(t) {
-    return -(Math.cos(Math.PI * t) - 1) / 2;
-  }
-
-  // Keyframes: [time_fraction, pct_position]
-  // Goes 50 → 28 → 50 → 72 → 50 over one full cycle
-  function getAnimPos(t) {
-    // t: 0..1 for full cycle
-    if (t < 0.25) return 50 - 22 * easeInOutSine(t / 0.25);        // 50→28
-    if (t < 0.5)  return 28 + 22 * easeInOutSine((t - 0.25) / 0.25); // 28→50
-    if (t < 0.75) return 50 + 22 * easeInOutSine((t - 0.5)  / 0.25); // 50→72
-    return              72 - 22 * easeInOutSine((t - 0.75) / 0.25);   // 72→50
-  }
-
-  const CYCLE_MS = 2200; // duration of one full sweep
-
-  function idleLoop(ts) {
-    if (userInteracted) return;
-    if (!idleStart) idleStart = ts;
-    const elapsed = ts - idleStart;
-    const t = (elapsed % CYCLE_MS) / CYCLE_MS;
-    const pct = getAnimPos(t);
-    // animate only slider1 (first one the user sees)
-    if (sliders[0]) sliders[0].setPos(pct);
-    idleRaf = requestAnimationFrame(idleLoop);
-  }
-
-  function stopIdleAnim() {
-    if (idleRaf) { cancelAnimationFrame(idleRaf); idleRaf = null; }
-  }
-
-  window.addEventListener('load', () => {
-    initSlider('slider1', 'after-clip-1', 'line1', 'handle1', 'after-img-1', 'guide1', 'guide-hand1');
-    initSlider('slider2', 'after-clip-2', 'line2', 'handle2', 'after-img-2', 'guide2', 'guide-hand2');
-
-    // Show guide + start animation after 2.5s if user hasn't touched anything
-    setTimeout(() => {
-      if (!userInteracted) {
-        // show guide on slider1
-        sliders[0].guide.classList.remove('hidden');
-        sliders[0].guideHand.style.left = '50%';
-        idleStart = null;
-        idleRaf = requestAnimationFrame(idleLoop);
-      }
-    }, 2500);
+  /* Mouse */
+  wrapper.addEventListener('mousedown', e => {
+    if (e.target.closest('.ba-fullscreen-btn')) return; // ignore fullscreen btn
+    onInteract();
+    active = true;
+    setPos(getPct(e.clientX));
   });
-</script>
+  window.addEventListener('mousemove', e => { if (active) setPos(getPct(e.clientX)); });
+  window.addEventListener('mouseup',   () => { active = false; });
 
+  /* Touch — prevent page scroll while dragging */
+  wrapper.addEventListener('touchstart', e => {
+    if (e.target.closest('.ba-fullscreen-btn')) return; // ignore fullscreen btn
+    onInteract();
+    active = true;
+    setPos(getPct(e.touches[0].clientX));
+  }, { passive: true });
+
+  wrapper.addEventListener('touchmove', e => {
+    if (!active) return;
+    e.preventDefault(); // stop page from scrolling
+    setPos(getPct(e.touches[0].clientX));
+  }, { passive: false });
+
+  window.addEventListener('touchend',   () => { active = false; });
+  window.addEventListener('touchcancel',() => { active = false; });
+
+  setPos(50);
+
+  const state = { setPos, guide, guideHand, getPos: () => pos };
+  sliders.push(state);
+  return state;
+}
+
+/* ════════════════════════════════
+   IDLE ANIMATION
+   ════════════════════════════════ */
+let idleRaf   = null;
+let idleStart = null;
+
+function easeInOutSine(t) { return -(Math.cos(Math.PI * t) - 1) / 2; }
+
+function getAnimPos(t) {
+  if (t < 0.25) return 50 - 22 * easeInOutSine(t / 0.25);
+  if (t < 0.5)  return 28 + 22 * easeInOutSine((t - 0.25) / 0.25);
+  if (t < 0.75) return 50 + 22 * easeInOutSine((t - 0.5)  / 0.25);
+  return              72 - 22 * easeInOutSine((t - 0.75) / 0.25);
+}
+
+const CYCLE_MS = 2200;
+
+function idleLoop(ts) {
+  if (userInteracted) return;
+  if (!idleStart) idleStart = ts;
+  const t = ((ts - idleStart) % CYCLE_MS) / CYCLE_MS;
+  if (sliders[0]) sliders[0].setPos(getAnimPos(t));
+  idleRaf = requestAnimationFrame(idleLoop);
+}
+
+function stopIdleAnim() {
+  if (idleRaf) { cancelAnimationFrame(idleRaf); idleRaf = null; }
+}
+
+/* ════════════════════════════════
+   FULLSCREEN MODAL
+   ════════════════════════════════ */
+const fsModal    = document.getElementById('fs-modal');
+const fsTitle    = document.getElementById('fs-modal-title');
+const fsCloseBtn = document.getElementById('fs-close-btn');
+const fsBaseImg  = document.getElementById('fs-base-img');
+const fsOverImg  = document.getElementById('fs-over-img');
+let fsSliderState = null;
+
+const sliderMeta = [
+  {
+    title: 'Передняя сторона',
+    baseImg: 'after-FrontSide.png',
+    overImg: 'before-FrontSide.png'
+  },
+  {
+    title: 'Задняя сторона',
+    baseImg: 'after-BackSide.png',
+    overImg: 'before-backSide.png'
+  }
+];
+
+function openFullscreen(idx) {
+  const meta = sliderMeta[idx];
+  fsTitle.textContent = meta.title;
+  fsBaseImg.src = meta.baseImg;
+  fsOverImg.src = meta.overImg;
+
+  // re-init the modal slider fresh
+  if (fsSliderState) {
+    // remove from sliders array to avoid conflicts
+    const i = sliders.indexOf(fsSliderState);
+    if (i > -1) sliders.splice(i, 1);
+  }
+  fsSliderState = makeSlider('fs-slider','fs-clip','fs-line','fs-handle','fs-over-img', null, null);
+  // wait for image to paint then set 50%
+  requestAnimationFrame(() => fsSliderState.setPos(50));
+
+  fsModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFullscreen() {
+  fsModal.classList.remove('open');
+  document.body.style.overflow = '';
+  // reset main sliders to centre
+  sliders.forEach(s => { if (s !== fsSliderState) s.setPos(50); });
+}
+
+fsCloseBtn.addEventListener('click', closeFullscreen);
+
+// Close on backdrop click
+fsModal.addEventListener('click', e => {
+  if (e.target === fsModal) closeFullscreen();
+});
+
+// ESC key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeFullscreen();
+});
+
+// Wire up fullscreen buttons
+document.querySelectorAll('.ba-fullscreen-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    openFullscreen(+btn.dataset.idx);
+  });
+});
+
+/* ════════════════════════════════
+   INIT
+   ════════════════════════════════ */
+window.addEventListener('load', () => {
+  makeSlider('slider1','clip-1','line1','handle1','over-img-1','guide1','guide-hand1');
+  makeSlider('slider2','clip-2','line2','handle2','over-img-2','guide2','guide-hand2');
+
+  setTimeout(() => {
+    if (!userInteracted) {
+      sliders[0].guide.classList.remove('hidden');
+      sliders[0].guideHand.style.left = '50%';
+      idleStart = null;
+      idleRaf = requestAnimationFrame(idleLoop);
+    }
+  }, 2500);
+});
+</script>
 </body>
 </html>
