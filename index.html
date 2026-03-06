@@ -7,6 +7,14 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    /* disable selection highlight everywhere */
+    * {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
       background: #1a1a1a;
       color: #f0f0f0;
@@ -353,6 +361,12 @@
       color: #555;
       font-size: 0.8rem;
     }
+    footer a {
+      color: #ffa500;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    footer a:hover { color: #ffcc66; }
 
     /* ── MOBILE ── */
     @media (max-width: 600px) {
@@ -394,7 +408,7 @@
     <div class="section-title">
       <div class="icon">🏠</div>
       Передняя сторона
-      <span class="num">01 / 02</span>
+      <span class="num">01 / 03</span>
     </div>
     <div class="ba-wrapper" id="slider1">
       <img src="after-FrontSide.png"  alt="После — передняя" id="base-img-1" />
@@ -422,7 +436,7 @@
     <div class="section-title">
       <div class="icon">🧱</div>
       Задняя сторона
-      <span class="num">02 / 02</span>
+      <span class="num">02 / 03</span>
     </div>
     <div class="ba-wrapper" id="slider2">
       <img src="after-BackSide.png"  alt="После — задняя" id="base-img-2" />
@@ -441,6 +455,34 @@
       <div class="ba-guide hidden" id="guide2">
         <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
         <div class="ba-guide-hand" id="guide-hand2">👆</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRICK CLOSE-UP -->
+  <div class="slider-section">
+    <div class="section-title">
+      <div class="icon">🔍</div>
+      Кирпич крупным планом
+      <span class="num">03 / 03</span>
+    </div>
+    <div class="ba-wrapper" id="slider3">
+      <img src="after-brick.png"  alt="После — кирпич" id="base-img-3" />
+      <div class="ba-after" id="clip-3">
+        <img src="before-brick.png" alt="До — кирпич" id="over-img-3" />
+      </div>
+      <div class="ba-label ba-label-before">До</div>
+      <div class="ba-label ba-label-after">После</div>
+      <div class="ba-divider-line" id="line3"></div>
+      <div class="ba-handle" id="handle3">
+        <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      </div>
+      <button class="ba-fullscreen-btn" data-idx="2" aria-label="На весь экран">
+        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      </button>
+      <div class="ba-guide hidden" id="guide3">
+        <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
+        <div class="ba-guide-hand" id="guide-hand3">👆</div>
       </div>
     </div>
   </div>
@@ -471,7 +513,10 @@
 
 </main>
 
-<footer>&copy; 2026 · Пескоструйные работы по кирпичу</footer>
+<footer>
+  &copy; 2026 · Пескоструйные работы по кирпичу &nbsp;·&nbsp;
+  Разработка: <a href="https://tryander.space" target="_blank" rel="noopener">tryander.space</a>
+</footer>
 
 <!-- ── FULLSCREEN MODAL ── -->
 <div class="fs-modal" id="fs-modal" role="dialog" aria-modal="true">
@@ -622,6 +667,11 @@ const sliderMeta = [
     title: 'Задняя сторона',
     baseImg: 'after-BackSide.png',
     overImg: 'before-backSide.png'
+  },
+  {
+    title: 'Кирпич крупным планом',
+    baseImg: 'after-brick.png',
+    overImg: 'before-brick.png'
   }
 ];
 
@@ -678,6 +728,7 @@ document.querySelectorAll('.ba-fullscreen-btn').forEach(btn => {
 window.addEventListener('load', () => {
   makeSlider('slider1','clip-1','line1','handle1','over-img-1','guide1','guide-hand1');
   makeSlider('slider2','clip-2','line2','handle2','over-img-2','guide2','guide-hand2');
+  makeSlider('slider3','clip-3','line3','handle3','over-img-3','guide3','guide-hand3');
 
   setTimeout(() => {
     if (!userInteracted) {
