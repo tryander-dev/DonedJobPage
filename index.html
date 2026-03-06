@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Пескоструйная обработка кирпича</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #1a1a1a;
+      color: #f0f0f0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      padding: 50px 20px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    header .badge {
+      display: inline-block;
+      background: rgba(255,165,0,0.2);
+      border: 1px solid rgba(255,165,0,0.5);
+      color: #ffa500;
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 30px;
+      margin-bottom: 18px;
+    }
+    header h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: 1px;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    header h1 span {
+      color: #ffa500;
+    }
+    header p {
+      font-size: 1.05rem;
+      color: #aac;
+      max-width: 580px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      max-width: 900px;
+      margin: 40px auto 0;
+      padding: 0 20px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #ffa500, transparent);
+    }
+    .divider span {
+      color: #ffa500;
+      font-size: 1.3rem;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+    }
+
+    /* ── SLIDER SECTION ── */
+    .slider-section {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .slider-section .section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .slider-section .section-title .icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #ffa500, #ff6b00);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .slider-section .section-title .num {
+      font-size: 0.75rem;
+      color: #ffa500;
+      background: rgba(255,165,0,0.12);
+      border: 1px solid rgba(255,165,0,0.3);
+      padding: 2px 10px;
+      border-radius: 12px;
+      margin-left: auto;
+      letter-spacing: 1px;
+    }
+
+    /* ── BEFORE-AFTER SLIDER ── */
+    .ba-wrapper {
+      position: relative;
+      width: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      cursor: ew-resize;
+      user-select: none;
+      touch-action: none;
+      border: 1px solid #333;
+    }
+    .ba-wrapper img {
+      display: block;
+      width: 100%;
+      height: auto;
+      pointer-events: none;
+    }
+    .ba-after {
+      position: absolute;
+      top: 0; left: 0;
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .ba-after img {
+      width: auto;
+      height: 100%;
+      max-width: none;
+      position: absolute;
+      top: 0; left: 0;
+    }
+    /* Labels */
+    .ba-label {
+      position: absolute;
+      top: 14px;
+      background: rgba(0,0,0,0.65);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 4px;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+    }
+    .ba-label-before { left: 14px;  background: rgba(180,60,0,0.75); }
+    .ba-label-after  { right: 14px; background: rgba(0,140,60,0.75); }
+
+    /* Divider line */
+    .ba-divider-line {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3px;
+      height: 100%;
+      background: #fff;
+      pointer-events: none;
+      box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    }
+    /* Handle */
+    .ba-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 46px;
+      height: 46px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.5);
+      pointer-events: none;
+      z-index: 10;
+    }
+    .ba-handle svg {
+      width: 22px;
+      height: 22px;
+      fill: #333;
+    }
+
+    /* ── IDLE GUIDE ── */
+    .ba-guide {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+      transition: opacity 0.5s ease;
+    }
+    .ba-guide.hidden { opacity: 0; }
+
+    /* floating pill label */
+    .ba-guide-pill {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -68px);
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 30px;
+      padding: 7px 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      animation: guidePop 0.4s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    .ba-guide-pill .arrow { font-size: 1rem; }
+
+    /* hand icon that follows the handle */
+    .ba-guide-hand {
+      position: absolute;
+      top: 50%;
+      /* left set by JS */
+      transform: translate(-50%, 14px);
+      font-size: 2rem;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+      transition: left 0.05s linear;
+      animation: guidePop 0.4s 0.1s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    @keyframes guidePop {
+      from { opacity: 0; transform: translate(-50%, 28px) scale(0.7); }
+      to   { opacity: 1; transform: translate(-50%, 14px) scale(1); }
+    }
+
+    /* ── INFO CARDS ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .info-card {
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .info-card:hover { border-color: #ffa500; }
+    .info-card .ic-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .info-card .ic-label {
+      font-size: 0.75rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .info-card .ic-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      border-top: 1px solid #2a2a2a;
+      color: #555;
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 600px) {
+      .ba-handle { width: 36px; height: 36px; }
+      .ba-handle svg { width: 18px; height: 18px; }
+      .ba-label { font-size: 0.68rem; padding: 4px 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">✦ Выполненная работа</div>
+  <h1>Пескоструйная очистка<br><span>кирпичной кладки</span></h1>
+</header>
+
+<div class="divider"><span>◆</span></div>
+
+<main>
+
+  <!-- FRONT SIDE -->
+  <div class="slider-section">
+    <div class="section-title">
+      <div class="icon">🏠</div>
+      Передняя сторона
+      <span class="num">01 / 02</span>
+    </div>
+    <div class="ba-wrapper" id="slider1">
+      <!-- After (base — right side) -->
+      <img src="after-FrontSide.png" alt="После — передняя сторона" id="before-img-1" />
+      <!-- Before (overlay — left side) -->
+      <div class="ba-after" id="after-clip-1">
+        <img src="before-FrontSide.png" alt="До — передняя сторона" id="after-img-1" />
+      </div>
+      <!-- Labels -->
+      <div class="ba-label ba-label-before">До</div>
+      <div class="ba-label ba-label-after">После</div>
+      <!-- Divider -->
+      <div class="ba-divider-line" id="line1"></div>
+      <div class="ba-handle" id="handle1">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <!-- Idle guide -->
+      <div class="ba-guide hidden" id="guide1">
+        <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
+        <div class="ba-guide-hand" id="guide-hand1">👆</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BACK SIDE -->
+  <div class="slider-section">
+    <div class="section-title">
+      <div class="icon">🧱</div>
+      Задняя сторона
+      <span class="num">02 / 02</span>
+    </div>
+    <div class="ba-wrapper" id="slider2">
+      <!-- After (base — right side) -->
+      <img src="after-BackSide.png" alt="После — задняя сторона" id="before-img-2" />
+      <!-- Before (overlay — left side) -->
+      <div class="ba-after" id="after-clip-2">
+        <img src="before-backSide.png" alt="До — задняя сторона" id="after-img-2" />
+      </div>
+      <div class="ba-label ba-label-before">До</div>
+      <div class="ba-label ba-label-after">После</div>
+      <div class="ba-divider-line" id="line2"></div>
+      <div class="ba-handle" id="handle2">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <!-- Idle guide -->
+      <div class="ba-guide hidden" id="guide2">
+        <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
+        <div class="ba-guide-hand" id="guide-hand2">👆</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO CARDS -->
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="ic-icon">🔫</div>
+      <div class="ic-label">Метод</div>
+      <div class="ic-value">Пескоструй</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon">🧱</div>
+      <div class="ic-label">Материал</div>
+      <div class="ic-value">Кирпичная кладка</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon">✅</div>
+      <div class="ic-label">Результат</div>
+      <div class="ic-value">Очистка выполнена</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon">📸</div>
+      <div class="ic-label">Ракурсы</div>
+      <div class="ic-value">Фасад + тыльная сторона</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  &copy; 2026 · Пескоструйные работы по кирпичу
+</footer>
+
+<script>
+  /* ── Each slider state ── */
+  const sliders = [];
+  let userInteracted = false;
+
+  function initSlider(wrapperId, afterClipId, lineId, handleId, afterImgId, guideId, guideHandId) {
+    const wrapper   = document.getElementById(wrapperId);
+    const afterClip = document.getElementById(afterClipId);
+    const line      = document.getElementById(lineId);
+    const handle    = document.getElementById(handleId);
+    const afterImg  = document.getElementById(afterImgId);
+    const guide     = document.getElementById(guideId);
+    const guideHand = document.getElementById(guideHandId);
+
+    let active = false;
+    let pos = 50;
+
+    function setPos(pct) {
+      pct = Math.max(2, Math.min(98, pct));
+      pos = pct;
+      afterClip.style.width = pct + '%';
+      line.style.left       = pct + '%';
+      handle.style.left     = pct + '%';
+      afterImg.style.width  = (100 / (pct / 100)) + '%';
+      // sync guide hand with handle
+      if (guideHand) guideHand.style.left = pct + '%';
+    }
+
+    function getPercent(clientX) {
+      const rect = wrapper.getBoundingClientRect();
+      return ((clientX - rect.left) / rect.width) * 100;
+    }
+
+    function onInteract() {
+      if (!userInteracted) {
+        userInteracted = true;
+        // hide all guides forever
+        sliders.forEach(s => {
+          s.guide.classList.add('hidden');
+        });
+        stopIdleAnim();
+      }
+    }
+
+    wrapper.addEventListener('mousedown', e => {
+      onInteract();
+      active = true;
+      setPos(getPercent(e.clientX));
+    });
+    window.addEventListener('mousemove', e => { if (active) setPos(getPercent(e.clientX)); });
+    window.addEventListener('mouseup',   () => { active = false; });
+
+    wrapper.addEventListener('touchstart', e => {
+      onInteract();
+      active = true;
+      setPos(getPercent(e.touches[0].clientX));
+    }, { passive: true });
+    window.addEventListener('touchmove', e => { if (active) setPos(getPercent(e.touches[0].clientX)); }, { passive: true });
+    window.addEventListener('touchend',  () => { active = false; });
+
+    setPos(50);
+
+    const state = { setPos, guide, guideHand, getPos: () => pos };
+    sliders.push(state);
+    return state;
+  }
+
+  /* ── Idle animation ── */
+  let idleRaf = null;
+  let idleStart = null;
+
+  // Easing: smooth sine wave
+  function easeInOutSine(t) {
+    return -(Math.cos(Math.PI * t) - 1) / 2;
+  }
+
+  // Keyframes: [time_fraction, pct_position]
+  // Goes 50 → 28 → 50 → 72 → 50 over one full cycle
+  function getAnimPos(t) {
+    // t: 0..1 for full cycle
+    if (t < 0.25) return 50 - 22 * easeInOutSine(t / 0.25);        // 50→28
+    if (t < 0.5)  return 28 + 22 * easeInOutSine((t - 0.25) / 0.25); // 28→50
+    if (t < 0.75) return 50 + 22 * easeInOutSine((t - 0.5)  / 0.25); // 50→72
+    return              72 - 22 * easeInOutSine((t - 0.75) / 0.25);   // 72→50
+  }
+
+  const CYCLE_MS = 2200; // duration of one full sweep
+
+  function idleLoop(ts) {
+    if (userInteracted) return;
+    if (!idleStart) idleStart = ts;
+    const elapsed = ts - idleStart;
+    const t = (elapsed % CYCLE_MS) / CYCLE_MS;
+    const pct = getAnimPos(t);
+    // animate only slider1 (first one the user sees)
+    if (sliders[0]) sliders[0].setPos(pct);
+    idleRaf = requestAnimationFrame(idleLoop);
+  }
+
+  function stopIdleAnim() {
+    if (idleRaf) { cancelAnimationFrame(idleRaf); idleRaf = null; }
+  }
+
+  window.addEventListener('load', () => {
+    initSlider('slider1', 'after-clip-1', 'line1', 'handle1', 'after-img-1', 'guide1', 'guide-hand1');
+    initSlider('slider2', 'after-clip-2', 'line2', 'handle2', 'after-img-2', 'guide2', 'guide-hand2');
+
+    // Show guide + start animation after 2.5s if user hasn't touched anything
+    setTimeout(() => {
+      if (!userInteracted) {
+        // show guide on slider1
+        sliders[0].guide.classList.remove('hidden');
+        sliders[0].guideHand.style.left = '50%';
+        idleStart = null;
+        idleRaf = requestAnimationFrame(idleLoop);
+      }
+    }, 2500);
+  });
+</script>
+
+</body>
+</html>
