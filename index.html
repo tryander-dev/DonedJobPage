@@ -7,7 +7,6 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* disable selection highlight everywhere */
     * {
       -webkit-user-select: none;
       -moz-user-select: none;
@@ -15,9 +14,22 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    :root {
+      --yellow: #f0b800;
+      --yellow-dim: rgba(240,184,0,0.15);
+      --yellow-border: rgba(240,184,0,0.35);
+      --bg: #111111;
+      --bg2: #181818;
+      --bg3: #202020;
+      --border: #2a2a2a;
+      --border2: #333;
+      --text: #e0e0e0;
+      --text-dim: #777;
+    }
+
     body {
-      background: #1a1a1a;
-      color: #f0f0f0;
+      background: var(--bg);
+      color: var(--text);
       font-family: 'Segoe UI', Arial, sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
@@ -25,105 +37,142 @@
 
     /* ── HEADER ── */
     header {
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      padding: 40px 20px 32px;
+      background: #0a0a0a;
+      padding: 0 20px;
       text-align: center;
       position: relative;
       overflow: hidden;
+      border-bottom: 3px solid var(--yellow);
     }
+
+    /* hazard-stripe top bar */
     header::before {
+      content: '';
+      display: block;
+      height: 7px;
+      background: repeating-linear-gradient(
+        -55deg,
+        var(--yellow) 0px,
+        var(--yellow) 12px,
+        #0a0a0a 12px,
+        #0a0a0a 24px
+      );
+    }
+
+    /* subtle concrete texture */
+    header::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%230a0a0a'/%3E%3Crect width='1' height='1' x='0' y='0' fill='%23ffffff' fill-opacity='0.025'/%3E%3Crect width='1' height='1' x='2' y='2' fill='%23ffffff' fill-opacity='0.015'/%3E%3C/svg%3E");
+      pointer-events: none;
     }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      padding: 36px 0 40px;
+    }
+
     header .badge {
       display: inline-block;
-      background: rgba(255,165,0,0.2);
-      border: 1px solid rgba(255,165,0,0.5);
-      color: #ffa500;
-      font-size: 0.78rem;
+      background: var(--yellow);
+      color: #0a0a0a;
+      font-size: 0.7rem;
+      font-weight: 900;
       letter-spacing: 3px;
       text-transform: uppercase;
-      padding: 5px 16px;
-      border-radius: 30px;
-      margin-bottom: 16px;
+      padding: 5px 20px;
+      margin-bottom: 18px;
+      clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
     }
+
     header h1 {
-      font-size: clamp(1.5rem, 5vw, 2.8rem);
-      font-weight: 700;
-      letter-spacing: 1px;
-      line-height: 1.2;
+      font-size: clamp(1.6rem, 5vw, 3rem);
+      font-weight: 900;
+      letter-spacing: 3px;
+      line-height: 1.15;
+      text-transform: uppercase;
     }
-    header h1 span { color: #ffa500; }
+    header h1 span { color: var(--yellow); }
 
     /* ── DIVIDER ── */
     .divider {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 0;
       max-width: 900px;
-      margin: 32px auto 0;
-      padding: 0 20px;
+      margin: 0 auto;
+      padding: 0;
+      height: 3px;
+      background: var(--border);
     }
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(to right, transparent, #ffa500, transparent);
-    }
-    .divider span { color: #ffa500; font-size: 1.2rem; }
+    .divider span { display: none; }
 
     /* ── MAIN ── */
     main {
       max-width: 1000px;
       margin: 0 auto;
-      padding: 32px 16px 60px;
+      padding: 40px 16px 64px;
       display: flex;
       flex-direction: column;
-      gap: 48px;
+      gap: 52px;
     }
 
     /* ── SLIDER SECTION ── */
-    .slider-section { display: flex; flex-direction: column; gap: 14px; }
+    .slider-section { display: flex; flex-direction: column; gap: 12px; }
+
     .section-title {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 1.15rem;
-      font-weight: 600;
-      color: #fff;
+      gap: 14px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
     }
+
     .section-title .icon {
-      width: 34px; height: 34px;
-      background: linear-gradient(135deg, #ffa500, #ff6b00);
-      border-radius: 8px;
+      width: 34px; height: 32px;
+      background: var(--yellow);
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.95rem;
-      flex-shrink: 0;
-    }
-    .section-title .num {
       font-size: 0.72rem;
-      color: #ffa500;
-      background: rgba(255,165,0,0.12);
-      border: 1px solid rgba(255,165,0,0.3);
+      font-weight: 900;
+      color: #0a0a0a;
+      letter-spacing: 0;
+      flex-shrink: 0;
+      clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+    }
+    .section-title .icon svg {
+      width: 16px; height: 16px;
+      stroke: #0a0a0a; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .section-title .num {
+      font-size: 0.65rem;
+      color: var(--yellow);
+      background: var(--yellow-dim);
+      border: 1px solid var(--yellow-border);
       padding: 2px 10px;
-      border-radius: 12px;
       margin-left: auto;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
     }
 
     /* ── BEFORE-AFTER SLIDER ── */
     .ba-wrapper {
       position: relative;
       width: 100%;
-      border-radius: 12px;
+      border-radius: 0;
       overflow: hidden;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      box-shadow: 0 4px 40px rgba(0,0,0,0.7);
       cursor: ew-resize;
       user-select: none;
-      /* touch-action handled by JS to prevent page scroll while dragging */
-      border: 1px solid #333;
+      border: 1px solid var(--border2);
+      border-left: 3px solid var(--yellow);
     }
     .ba-wrapper img {
       display: block;
@@ -150,20 +199,19 @@
     /* Labels */
     .ba-label {
       position: absolute;
-      top: 12px;
+      top: 10px;
       color: #fff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      padding: 5px 10px;
-      border-radius: 4px;
+      padding: 4px 12px;
+      border-radius: 0;
       pointer-events: none;
-      backdrop-filter: blur(4px);
       z-index: 5;
     }
-    .ba-label-before { left: 12px;  background: rgba(180,60,0,0.8); }
-    .ba-label-after  { right: 12px; background: rgba(0,140,60,0.8); }
+    .ba-label-before { left: 10px;  background: #8B2500; }
+    .ba-label-after  { right: 10px; background: #1a5c2a; }
 
     /* Divider line */
     .ba-divider-line {
@@ -171,45 +219,45 @@
       top: 0; left: 50%;
       transform: translateX(-50%);
       width: 3px; height: 100%;
-      background: #fff;
+      background: var(--yellow);
       pointer-events: none;
-      box-shadow: 0 0 8px rgba(0,0,0,0.5);
+      box-shadow: 0 0 12px rgba(240,184,0,0.4);
       z-index: 6;
     }
+
     /* Handle */
     .ba-handle {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 46px; height: 46px;
-      background: #fff;
-      border-radius: 50%;
+      width: 44px; height: 44px;
+      background: var(--yellow);
+      border-radius: 0;
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 3px 16px rgba(0,0,0,0.5);
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 4px 20px rgba(0,0,0,0.6);
       pointer-events: none;
       z-index: 10;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
     }
-    .ba-handle svg { width: 22px; height: 22px; }
+    .ba-handle svg { width: 20px; height: 20px; }
 
     /* Fullscreen button */
     .ba-fullscreen-btn {
       position: absolute;
-      bottom: 12px;
-      right: 12px;
+      bottom: 10px; right: 10px;
       z-index: 15;
-      width: 36px; height: 36px;
-      background: rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 8px;
+      width: 34px; height: 34px;
+      background: rgba(0,0,0,0.75);
+      border: 1px solid rgba(240,184,0,0.4);
+      border-radius: 0;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      backdrop-filter: blur(4px);
-      transition: background 0.2s, transform 0.15s;
+      transition: background 0.2s, border-color 0.2s;
       -webkit-tap-highlight-color: transparent;
     }
-    .ba-fullscreen-btn:hover { background: rgba(255,165,0,0.4); transform: scale(1.08); }
-    .ba-fullscreen-btn:active { transform: scale(0.95); }
-    .ba-fullscreen-btn svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .ba-fullscreen-btn:hover { background: rgba(240,184,0,0.25); border-color: var(--yellow); }
+    .ba-fullscreen-btn:active { opacity: 0.7; }
+    .ba-fullscreen-btn svg { width: 16px; height: 16px; stroke: var(--yellow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
     /* ── IDLE GUIDE ── */
     .ba-guide {
@@ -226,20 +274,20 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -68px);
-      background: rgba(0,0,0,0.65);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 30px;
+      background: rgba(0,0,0,0.82);
+      border: 1px solid var(--yellow-border);
+      border-radius: 0;
       padding: 7px 18px;
       display: flex; align-items: center; gap: 8px;
       color: #fff;
-      font-size: 0.83rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
       white-space: nowrap;
       animation: guidePop 0.4s cubic-bezier(.34,1.56,.64,1) both;
     }
-    .ba-guide-pill .arrow { font-size: 1rem; }
+    .ba-guide-pill .arrow { color: var(--yellow); font-size: 1rem; }
 
     .ba-guide-hand {
       position: absolute;
@@ -269,10 +317,7 @@
       pointer-events: none;
       transition: opacity 0.25s ease;
     }
-    .fs-modal.open {
-      opacity: 1;
-      pointer-events: all;
-    }
+    .fs-modal.open { opacity: 1; pointer-events: all; }
 
     .fs-topbar {
       width: 100%;
@@ -282,27 +327,29 @@
       justify-content: space-between;
       padding: 12px 16px 8px;
       flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
     }
     .fs-title-text {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #ccc;
-      letter-spacing: 0.5px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: var(--text-dim);
+      letter-spacing: 3px;
+      text-transform: uppercase;
     }
     .fs-close-btn {
-      width: 40px; height: 40px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 50%;
+      width: 38px; height: 38px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border2);
+      border-radius: 0;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s, transform 0.15s;
+      transition: background 0.2s, border-color 0.2s;
       -webkit-tap-highlight-color: transparent;
       flex-shrink: 0;
     }
-    .fs-close-btn:hover { background: rgba(255,60,60,0.5); transform: scale(1.08); }
-    .fs-close-btn:active { transform: scale(0.92); }
-    .fs-close-btn svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+    .fs-close-btn:hover { background: rgba(200,30,30,0.35); border-color: #c00; }
+    .fs-close-btn:active { opacity: 0.7; }
+    .fs-close-btn svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
 
     .fs-content {
       flex: 1;
@@ -314,9 +361,8 @@
       min-height: 0;
     }
 
-    /* Modal slider wrapper — keeps aspect ratio */
     #fs-slider {
-      border-radius: 10px;
+      border-radius: 0;
       width: 100%;
       max-height: calc(100vh - 90px);
     }
@@ -332,57 +378,78 @@
     .info-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 12px;
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
     }
     .info-card {
-      background: #222;
-      border: 1px solid #333;
-      border-radius: 12px;
-      padding: 18px 12px;
+      background: var(--bg2);
+      padding: 20px 12px;
       text-align: center;
-      transition: border-color 0.2s;
+      border-left: 3px solid transparent;
+      transition: border-color 0.2s, background 0.2s;
     }
-    .info-card:hover { border-color: #333; }
-    .info-card .ic-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .info-card:hover { border-left-color: var(--yellow); background: var(--bg3); }
+    .info-card .ic-icon {
+      width: 32px; height: 32px;
+      margin: 0 auto 10px;
+    }
+    .info-card .ic-icon svg {
+      width: 100%; height: 100%;
+      stroke: var(--yellow); fill: none;
+      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    }
     .info-card .ic-label {
-      font-size: 0.7rem;
-      color: #888;
+      font-size: 0.62rem;
+      color: var(--text-dim);
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 4px;
+      letter-spacing: 2px;
+      margin-bottom: 5px;
     }
-    .info-card .ic-value { font-size: 0.95rem; font-weight: 600; color: #fff; }
+    .info-card .ic-value {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
 
     /* ── GALLERY ── */
-    .gallery-section { display: flex; flex-direction: column; gap: 14px; }
+    .gallery-section { display: flex; flex-direction: column; gap: 12px; }
 
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      gap: 3px;
+      background: var(--border);
     }
     .gallery-item {
       position: relative;
-      border-radius: 10px;
       overflow: hidden;
-      border: 1px solid #333;
+      border: none;
       cursor: zoom-in;
       aspect-ratio: 16/9;
-      background: #111;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      background: #0d0d0d;
+      transition: opacity 0.2s;
     }
-    .gallery-item:hover {
-      transform: translateY(-3px);
-      border-color: #ffa500;
-      box-shadow: 0 8px 28px rgba(255,165,0,0.2);
+    .gallery-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid transparent;
+      transition: border-color 0.2s;
+      pointer-events: none;
+      z-index: 2;
     }
+    .gallery-item:hover::after { border-color: var(--yellow); }
     .gallery-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
       pointer-events: none;
+      transition: transform 0.3s;
     }
+    .gallery-item:hover img { transform: scale(1.03); }
     .gallery-item .gallery-overlay {
       position: absolute;
       inset: 0;
@@ -391,26 +458,29 @@
       align-items: center;
       justify-content: center;
       transition: background 0.2s;
+      z-index: 1;
     }
-    .gallery-item:hover .gallery-overlay { background: rgba(0,0,0,0.28); }
+    .gallery-item:hover .gallery-overlay { background: rgba(0,0,0,0.3); }
     .gallery-overlay svg {
       opacity: 0;
       transition: opacity 0.2s;
-      width: 36px; height: 36px;
-      stroke: #fff; fill: none; stroke-width: 1.8;
-      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+      width: 34px; height: 34px;
+      stroke: var(--yellow); fill: none; stroke-width: 1.8;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.8));
     }
     .gallery-item:hover .gallery-overlay svg { opacity: 1; }
     .gallery-caption {
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      background: linear-gradient(transparent, rgba(0,0,0,0.75));
-      color: #fff;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      padding: 18px 10px 8px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      color: #ccc;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 20px 10px 8px;
       text-align: center;
+      z-index: 1;
     }
 
     /* Lightbox */
@@ -418,7 +488,7 @@
       position: fixed;
       inset: 0;
       z-index: 2000;
-      background: rgba(0,0,0,0.96);
+      background: rgba(0,0,0,0.97);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -431,48 +501,43 @@
       max-width: 95vw;
       max-height: 92vh;
       object-fit: contain;
-      border-radius: 8px;
-      box-shadow: 0 10px 60px rgba(0,0,0,0.8);
+      border-radius: 0;
+      box-shadow: 0 0 0 1px var(--border2), 0 10px 60px rgba(0,0,0,0.9);
       display: block;
     }
     .lightbox-close {
       position: absolute;
       top: 16px; right: 16px;
-      width: 42px; height: 42px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 50%;
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border2);
+      border-radius: 0;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s, transform 0.15s;
+      transition: background 0.2s, border-color 0.2s;
     }
-    .lightbox-close:hover { background: rgba(255,60,60,0.5); transform: scale(1.08); }
-    .lightbox-close svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+    .lightbox-close:hover { background: rgba(200,30,30,0.35); border-color: #c00; }
+    .lightbox-close svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
 
     /* Extra photos grid */
     .extra-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 3px;
+      background: var(--border);
     }
     .extra-item { aspect-ratio: 4/3; }
 
     /* Final result highlight */
-    .final-item {
-      border-color: rgba(255,165,0,0.5);
-      box-shadow: 0 0 0 1px rgba(255,165,0,0.2), 0 6px 24px rgba(255,165,0,0.12);
-    }
-    .final-item:hover {
-      border-color: #ffa500;
-      box-shadow: 0 0 0 1px #ffa500, 0 8px 28px rgba(255,165,0,0.3);
-    }
+    .final-item::after { border-color: rgba(240,184,0,0.3) !important; }
+    .final-item:hover::after { border-color: var(--yellow) !important; }
     .final-caption {
-      background: linear-gradient(transparent, rgba(180, 100, 0, 0.85)) !important;
-      font-size: 0.75rem !important;
+      background: linear-gradient(transparent, rgba(100,60,0,0.9)) !important;
+      color: #f0c050 !important;
     }
 
     @media (max-width: 600px) {
-      .gallery-grid { grid-template-columns: 1fr; gap: 10px; }
+      .gallery-grid { grid-template-columns: 1fr; gap: 3px; }
       .gallery-item { aspect-ratio: 16/9; }
       .extra-grid { grid-template-columns: 1fr; }
       .extra-item { aspect-ratio: 4/3; }
@@ -482,80 +547,177 @@
       .gallery-item:last-child { grid-column: 1 / -1; max-width: 60%; margin: 0 auto; width: 100%; }
     }
 
+    /* ── ADDRESS ── */
+    .address-section {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .address-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 36px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .address-label {
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .address-label::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 14px;
+      background: var(--yellow);
+    }
+    .address-text {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+    .address-text svg {
+      width: 18px; height: 18px;
+      stroke: var(--yellow);
+      flex-shrink: 0;
+    }
+    .map-tabs {
+      display: flex;
+      gap: 2px;
+    }
+    .map-tab {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      color: var(--text-dim);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .map-tab.active {
+      background: var(--yellow);
+      color: #0a0a0a;
+      border-color: var(--yellow);
+    }
+    .map-tab:not(.active):hover {
+      background: var(--bg2);
+      color: var(--text);
+      border-color: var(--yellow-border);
+    }
+
+    .address-map {
+      width: 100%;
+      border: 1px solid var(--border2);
+      border-left: 3px solid var(--yellow);
+      overflow: hidden;
+      line-height: 0;
+    }
+    .address-map iframe {
+      display: block;
+      filter: grayscale(0.3) brightness(0.85);
+    }
+    @media (max-width: 600px) {
+      .address-map iframe { height: 260px; }
+    }
+
     /* ── FOOTER ── */
     footer {
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      border-top: 1px solid rgba(255,165,0,0.25);
+      background: #080808;
+      border-top: 3px solid var(--yellow);
       padding: 32px 20px 28px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
     }
     .footer-copy {
-      color: #88aaaa;
-      font-size: 0.8rem;
-      letter-spacing: 0.5px;
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
     .footer-contact {
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 40px;
-      padding: 10px 22px;
+      gap: 12px;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-left: 3px solid var(--yellow);
+      padding: 12px 24px;
     }
     .footer-contact .fc-label {
-      color: #88aaaa;
-      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
     .footer-contact a {
-      color: #fff;
-      font-weight: 700;
+      color: #0a0a0a;
+      font-weight: 900;
       font-size: 1rem;
       text-decoration: none;
-      letter-spacing: 0.5px;
-      background: linear-gradient(135deg, #ffa500, #ff6b00);
-      padding: 6px 16px;
-      border-radius: 20px;
-      transition: opacity 0.2s, transform 0.15s;
+      letter-spacing: 1px;
+      background: var(--yellow);
+      padding: 7px 20px;
+      transition: opacity 0.2s;
       display: inline-block;
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
     }
-    .footer-contact a:hover { opacity: 0.85; transform: scale(1.04); }
+    .footer-contact a:hover { opacity: 0.85; }
     .footer-dev {
-      font-size: 0.75rem;
-      color: #fff;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 1px;
     }
     .footer-dev a {
-      color: #ffa500;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      font-weight: 600;
+      color: var(--yellow);
+      text-decoration: none;
+      font-weight: 700;
+      border-bottom: 1px solid var(--yellow-border);
       transition: color 0.2s;
     }
-    .footer-dev a:hover { color: #ffcc66; }
+    .footer-dev a:hover { color: #ffe066; }
 
     /* ── MOBILE ── */
     @media (max-width: 600px) {
-      header { padding: 28px 16px 22px; }
-      main { padding: 24px 12px 48px; gap: 36px; }
-      .ba-handle { width: 40px; height: 40px; }
-      .ba-handle svg { width: 18px; height: 18px; }
-      .ba-label { font-size: 0.65rem; padding: 4px 8px; top: 8px; }
+      .header-inner { padding: 26px 0 30px; }
+      main { padding: 28px 12px 52px; gap: 40px; }
+      .ba-handle { width: 38px; height: 38px; }
+      .ba-handle svg { width: 17px; height: 17px; }
+      .ba-label { font-size: 0.6rem; padding: 3px 8px; top: 8px; }
       .ba-label-before { left: 8px; }
       .ba-label-after  { right: 8px; }
-      .ba-fullscreen-btn { width: 32px; height: 32px; bottom: 8px; right: 8px; }
-      .ba-fullscreen-btn svg { width: 15px; height: 15px; }
-      .ba-guide-pill { font-size: 0.75rem; padding: 5px 14px; transform: translate(-50%, -56px); }
+      .ba-fullscreen-btn { width: 30px; height: 30px; bottom: 8px; right: 8px; }
+      .ba-fullscreen-btn svg { width: 13px; height: 13px; }
+      .ba-guide-pill { font-size: 0.7rem; padding: 5px 12px; transform: translate(-50%, -56px); }
       .ba-guide-hand { font-size: 1.6rem; }
-      .section-title { font-size: 1rem; }
+      .section-title { font-size: 0.7rem; }
       .info-grid { grid-template-columns: repeat(2, 1fr); }
       .fs-topbar { padding: 10px 12px 6px; }
     }
 
     @media (max-width: 380px) {
-      header h1 { font-size: 1.3rem; }
+      header h1 { font-size: 1.35rem; }
       .info-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
@@ -563,18 +725,20 @@
 <body>
 
 <header>
-  <div class="badge">✦ Выполненная работа</div>
-  <h1>Пескоструйная очистка<br><span>кирпичной кладки</span></h1>
+  <div class="header-inner">
+    <div class="badge">Выполненная работа</div>
+    <h1>Пескоструйная очистка<br><span>кирпичной кладки</span></h1>
+  </div>
 </header>
 
-<div class="divider"><span>◆</span></div>
+<div class="divider"><span></span></div>
 
 <main>
 
   <!-- FRONT SIDE -->
   <div class="slider-section">
     <div class="section-title">
-      <div class="icon">🏠</div>
+      <div class="icon">01</div>
       Передняя сторона
       <span class="num">01 / 03</span>
     </div>
@@ -594,7 +758,7 @@
       </button>
       <div class="ba-guide hidden" id="guide1">
         <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
-        <div class="ba-guide-hand" id="guide-hand1">👆</div>
+        <div class="ba-guide-hand" id="guide-hand1">↕</div>
       </div>
     </div>
   </div>
@@ -602,7 +766,7 @@
   <!-- BACK SIDE -->
   <div class="slider-section">
     <div class="section-title">
-      <div class="icon">🧱</div>
+      <div class="icon">02</div>
       Задняя сторона
       <span class="num">02 / 03</span>
     </div>
@@ -622,7 +786,7 @@
       </button>
       <div class="ba-guide hidden" id="guide2">
         <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
-        <div class="ba-guide-hand" id="guide-hand2">👆</div>
+        <div class="ba-guide-hand" id="guide-hand2">↕</div>
       </div>
     </div>
   </div>
@@ -630,7 +794,7 @@
   <!-- BRICK CLOSE-UP -->
   <div class="slider-section">
     <div class="section-title">
-      <div class="icon">🔍</div>
+      <div class="icon">03</div>
       Кирпич крупным планом
       <span class="num">03 / 03</span>
     </div>
@@ -650,7 +814,7 @@
       </button>
       <div class="ba-guide hidden" id="guide3">
         <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
-        <div class="ba-guide-hand" id="guide-hand3">👆</div>
+        <div class="ba-guide-hand" id="guide-hand3">↕</div>
       </div>
     </div>
   </div>
@@ -658,7 +822,7 @@
   <!-- EXTRA PHOTOS -->
   <div class="gallery-section">
     <div class="section-title">
-      <div class="icon">📷</div>
+      <div class="icon"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
       Дополнительные фото
     </div>
     <div class="extra-grid">
@@ -674,7 +838,7 @@
         <div class="gallery-overlay">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
         </div>
-        <div class="gallery-caption final-caption">✅ Итоговый результат — покрашен и готов</div>
+        <div class="gallery-caption final-caption">Итоговый результат — покрашен и готов</div>
       </div>
     </div>
   </div>
@@ -682,7 +846,7 @@
   <!-- GALLERY -->
   <div class="gallery-section">
     <div class="section-title">
-      <div class="icon">🖼️</div>
+      <div class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
       Галерея коллажей
     </div>
     <div class="gallery-grid">
@@ -713,22 +877,22 @@
   <!-- INFO CARDS -->
   <div class="info-grid">
     <div class="info-card">
-      <div class="ic-icon">🔫</div>
+      <div class="ic-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
       <div class="ic-label">Метод</div>
       <div class="ic-value">Пескоструй</div>
     </div>
     <div class="info-card">
-      <div class="ic-icon">🧱</div>
+      <div class="ic-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="9" height="5"/><rect x="13" y="4" width="9" height="5"/><rect x="2" y="11" width="6" height="5"/><rect x="10" y="11" width="12" height="5"/><rect x="2" y="18" width="10" height="4"/><rect x="14" y="18" width="8" height="4"/></svg></div>
       <div class="ic-label">Материал</div>
       <div class="ic-value">Кирпичная кладка</div>
     </div>
     <div class="info-card">
-      <div class="ic-icon">✅</div>
+      <div class="ic-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
       <div class="ic-label">Результат</div>
       <div class="ic-value">Очистка выполнена</div>
     </div>
     <div class="info-card">
-      <div class="ic-icon">📸</div>
+      <div class="ic-icon"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
       <div class="ic-label">Ракурсы</div>
       <div class="ic-value">Фасад + тыльная</div>
     </div>
@@ -736,11 +900,35 @@
 
 </main>
 
+<!-- ── ADDRESS ── -->
+<section class="address-section">
+  <div class="address-inner">
+    <div class="address-label">Место выполнения работ</div>
+    <div class="address-text">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      ул. Темерницкая, 1 — Ростов-на-Дону
+    </div>
+    <div class="map-tabs">
+      <button class="map-tab active">Карта</button>
+      <a class="map-tab" href="https://yandex.ru/maps/?text=Темерницкая+1%2C+Ворошиловский+район%2C+Ростов-на-Дону&l=stv" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;vertical-align:middle;margin-right:5px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Панорама
+      </a>
+    </div>
+    <div class="address-map">
+      <iframe id="map-frame"
+        src="https://yandex.ru/map-widget/v1/?text=Темерницкая%201%2C%20Ворошиловский%20район%2C%20Ростов-на-Дону&z=16&l=map"
+        width="100%" height="340" frameborder="0" allowfullscreen loading="lazy"
+        title="Место выполнения работ">
+      </iframe>
+    </div>
+  </div>
+</section>
+
 <footer>
-  <div class="footer-copy">&copy; 2026 · Пескоструйные работы по кирпичу</div>
+  <div class="footer-copy">&copy; 2026 · Пескоструйные работы · ск-третьяков.рф</div>
   <div class="footer-contact">
     <span class="fc-label">Исполнитель:</span>
-    <a href="tel:+79381553467">📞 +7 938 155-34-67</a>
+    <a href="tel:+79381553467">+7 938 155-34-67</a>
   </div>
   <div class="footer-dev">Разработка: <a href="https://tryander.space" target="_blank" rel="noopener">tryander.space</a></div>
 </footer>
@@ -799,7 +987,7 @@ function closeLightbox() {
 }
 
 lightboxClose.addEventListener('click', closeLightbox);
-lightbox.addEventListener('click', e => { if (e.target === lightbox || e.target === lightboxImg) closeLightbox(); });
+lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLightbox(); closeFullscreen(); } });
 
 /* ════════════════════════════════
@@ -807,6 +995,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLight
    ════════════════════════════════ */
 const sliders = [];
 let userInteracted = false;
+let anyDragging = false;
 
 function makeSlider(wrapperId, clipId, lineId, handleId, overImgId, guideId, guideHandId) {
   const wrapper  = document.getElementById(wrapperId);
@@ -848,10 +1037,15 @@ function makeSlider(wrapperId, clipId, lineId, handleId, overImgId, guideId, gui
     if (e.target.closest('.ba-fullscreen-btn')) return; // ignore fullscreen btn
     onInteract();
     active = true;
+    anyDragging = true;
     setPos(getPct(e.clientX));
   });
   window.addEventListener('mousemove', e => { if (active) setPos(getPct(e.clientX)); });
-  window.addEventListener('mouseup',   () => { active = false; });
+  window.addEventListener('mouseup',   () => {
+    active = false;
+    // Delay clearing so the click handler (which fires after mouseup) sees the flag
+    setTimeout(() => { anyDragging = false; }, 50);
+  });
 
   /* Touch — prevent page scroll while dragging */
   wrapper.addEventListener('touchstart', e => {
@@ -963,9 +1157,10 @@ function closeFullscreen() {
 
 fsCloseBtn.addEventListener('click', closeFullscreen);
 
-// Close on backdrop click
+// Close on backdrop click (anywhere outside the slider and topbar)
 fsModal.addEventListener('click', e => {
-  if (e.target === fsModal) closeFullscreen();
+  if (anyDragging) return; // ignore click after drag
+  if (!e.target.closest('#fs-slider') && !e.target.closest('.fs-topbar')) closeFullscreen();
 });
 
 // Wire up fullscreen buttons
