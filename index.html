@@ -23,6 +23,7 @@
   " />
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
 
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0a0a'/%3E%3Crect width='32' height='3' fill='%23f0b800'/%3E%3Crect y='29' width='32' height='3' fill='%23f0b800'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%23f0b800' font-family='Arial Black,Arial' font-weight='900' font-size='13'%3EСК%3C/text%3E%3C/svg%3E" />
   <title>СК-Третьяков — Пескоструй, Кровля, Фасад</title>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -989,6 +990,105 @@
       .section-head { margin-bottom: 24px; }
     }
 
+    /* ══════════════════════════════════
+       SCROLL ANIMATIONS
+    ══════════════════════════════════ */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up-delay-1 { transition-delay: 0.08s; }
+    .fade-up-delay-2 { transition-delay: 0.16s; }
+    .fade-up-delay-3 { transition-delay: 0.24s; }
+
+    /* ══════════════════════════════════
+       FORM LIVE VALIDATION
+    ══════════════════════════════════ */
+    .form-group { position: relative; }
+    .field-ok {
+      position: absolute;
+      right: 12px; top: 50%;
+      transform: translateY(-50%);
+      width: 18px; height: 18px;
+      background: var(--green);
+      clip-path: polygon(3px 0%, 100% 0%, calc(100% - 3px) 100%, 0% 100%);
+      display: none;
+      align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .field-ok svg {
+      width: 11px; height: 11px;
+      stroke: #fff; fill: none;
+      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .form-group.valid input,
+    .form-group.valid select,
+    .form-group.valid textarea { border-color: var(--green) !important; }
+    .form-group.valid .field-ok { display: flex; }
+
+    /* ══════════════════════════════════
+       TOAST
+    ══════════════════════════════════ */
+    #toast {
+      position: fixed;
+      bottom: 80px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--bg3);
+      border: 1px solid var(--yellow-border);
+      border-left: 3px solid var(--yellow);
+      color: var(--text);
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      padding: 10px 20px;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+      white-space: nowrap;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ══════════════════════════════════
+       MOBILE CALL BUTTON
+    ══════════════════════════════════ */
+    #mobile-call {
+      display: none;
+      position: fixed;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 98;
+      background: var(--yellow);
+      color: #0a0a0a;
+      font-weight: 900;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 14px 32px;
+      clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+      box-shadow: 0 4px 24px rgba(240,184,0,0.35);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    #mobile-call.show { opacity: 1; pointer-events: auto; }
+    #mobile-call svg { width: 16px; height: 16px; stroke: #0a0a0a; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    @media (min-width: 641px) {
+      #mobile-call { display: none !important; }
+    }
+
     @media (max-width: 380px) {
       .why-grid { grid-template-columns: 1fr; }
       .hero-stat-num { font-size: 1.1rem; }
@@ -1126,7 +1226,7 @@
     </div>
     <div class="services-grid">
 
-      <div class="service-card">
+      <div class="service-card fade-up">
         <div class="service-icon">
           <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
         </div>
@@ -1135,7 +1235,7 @@
         <div class="service-price">от 180 руб/м²</div>
       </div>
 
-      <div class="service-card">
+      <div class="service-card fade-up fade-up-delay-1">
         <div class="service-icon">
           <svg viewBox="0 0 24 24"><polyline points="3 9 12 2 21 9"/><path d="M3 9v11a1 1 0 001 1h4v-6h8v6h4a1 1 0 001-1V9"/><path d="M5 9v5M19 9v5"/><line x1="3" y1="14" x2="21" y2="14"/></svg>
         </div>
@@ -1144,7 +1244,7 @@
         <div class="service-price">от 450 руб/м²</div>
       </div>
 
-      <div class="service-card">
+      <div class="service-card fade-up fade-up-delay-2">
         <div class="service-icon">
           <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
         </div>
@@ -1394,13 +1494,15 @@
           </div>
 
           <div class="form-row-2">
-            <div class="form-group">
+            <div class="form-group" id="fg-name">
               <label for="f-name">Имя *</label>
               <input type="text" id="f-name" placeholder="Иван Иванов" maxlength="100" />
+              <span class="field-ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="fg-phone">
               <label for="f-phone">Телефон *</label>
               <input type="tel" id="f-phone" placeholder="+7 (___) ___-__-__" maxlength="18" autocomplete="tel" />
+              <span class="field-ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
             </div>
           </div>
           <div class="form-group">
@@ -1523,6 +1625,15 @@
     <div class="footer-hazard"></div>
   </div>
 </footer>
+
+<!-- Toast -->
+<div id="toast">Скопировано!</div>
+
+<!-- Mobile call button -->
+<a id="mobile-call" href="tel:+79381553467">
+  <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.72A2 2 0 012 .79h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.53a16 16 0 006.29 6.29l1.1-1.34a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+  Позвонить
+</a>
 
 <!-- Scroll to top -->
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
@@ -1707,6 +1818,48 @@
       alert('Ошибка при отправке. Позвоните нам: +7 (938) 155-34-67');
     }
   }
+
+  /* ── SCROLL ANIMATIONS ── */
+  const fadeEls = document.querySelectorAll('.fade-up');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  fadeEls.forEach(el => observer.observe(el));
+
+  /* ── LIVE FORM VALIDATION ── */
+  document.getElementById('f-name').addEventListener('input', function() {
+    document.getElementById('fg-name').classList.toggle('valid', this.value.trim().length >= 2);
+  });
+  document.getElementById('f-phone').addEventListener('input', function() {
+    const d = this.value.replace(/\D/g,'');
+    document.getElementById('fg-phone').classList.toggle('valid', d.length === 11 && d.startsWith('7'));
+  });
+
+  /* ── TOAST ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  /* ── CLICK TO COPY PHONE ── */
+  document.querySelectorAll('a[href="tel:+79381553467"]').forEach(el => {
+    el.addEventListener('click', function(e) {
+      if (window.innerWidth > 640) { // на десктопе — копируем, на мобиле — звоним
+        e.preventDefault();
+        navigator.clipboard.writeText('+79381553467').then(() => showToast('Номер скопирован!'));
+      }
+    });
+  });
+
+  /* ── MOBILE CALL BUTTON ── */
+  const mobileCall = document.getElementById('mobile-call');
+  const heroSection = document.getElementById('home');
+  window.addEventListener('scroll', () => {
+    const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+    mobileCall.classList.toggle('show', window.scrollY > heroBottom - 100);
+  });
 
   /* ── SMOOTH NAV HIGHLIGHT ── */
   const sections = document.querySelectorAll('section[id]');
