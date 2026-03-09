@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Пескоструйная обработка кирпича</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    * {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --yellow: #f0b800;
+      --yellow-dim: rgba(240,184,0,0.15);
+      --yellow-border: rgba(240,184,0,0.35);
+      --bg: #111111;
+      --bg2: #181818;
+      --bg3: #202020;
+      --border: #2a2a2a;
+      --border2: #333;
+      --text: #e0e0e0;
+      --text-dim: #777;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: #0a0a0a;
+      padding: 0 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 3px solid var(--yellow);
+    }
+
+    /* hazard-stripe top bar */
+    header::before {
+      content: '';
+      display: block;
+      height: 7px;
+      background: repeating-linear-gradient(
+        -55deg,
+        var(--yellow) 0px,
+        var(--yellow) 12px,
+        #0a0a0a 12px,
+        #0a0a0a 24px
+      );
+    }
+
+    /* subtle concrete texture */
+    header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%230a0a0a'/%3E%3Crect width='1' height='1' x='0' y='0' fill='%23ffffff' fill-opacity='0.025'/%3E%3Crect width='1' height='1' x='2' y='2' fill='%23ffffff' fill-opacity='0.015'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      padding: 36px 0 40px;
+    }
+
+    header .badge {
+      display: inline-block;
+      background: var(--yellow);
+      color: #0a0a0a;
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 5px 20px;
+      margin-bottom: 18px;
+      clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    }
+
+    header h1 {
+      font-size: clamp(1.6rem, 5vw, 3rem);
+      font-weight: 900;
+      letter-spacing: 3px;
+      line-height: 1.15;
+      text-transform: uppercase;
+    }
+    header h1 span { color: var(--yellow); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0;
+      height: 3px;
+      background: var(--border);
+    }
+    .divider span { display: none; }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 16px 64px;
+      display: flex;
+      flex-direction: column;
+      gap: 52px;
+    }
+
+    /* ── SLIDER SECTION ── */
+    .slider-section { display: flex; flex-direction: column; gap: 12px; }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title .icon {
+      width: 34px; height: 32px;
+      background: var(--yellow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: #0a0a0a;
+      letter-spacing: 0;
+      flex-shrink: 0;
+      clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+    }
+    .section-title .icon svg {
+      width: 16px; height: 16px;
+      stroke: #0a0a0a; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .section-title .num {
+      font-size: 0.65rem;
+      color: var(--yellow);
+      background: var(--yellow-dim);
+      border: 1px solid var(--yellow-border);
+      padding: 2px 10px;
+      margin-left: auto;
+      letter-spacing: 2px;
+    }
+
+    /* ── BEFORE-AFTER SLIDER ── */
+    .ba-wrapper {
+      position: relative;
+      width: 100%;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.7);
+      cursor: ew-resize;
+      user-select: none;
+      border: 1px solid var(--border2);
+      border-left: 3px solid var(--yellow);
+    }
+    .ba-wrapper img {
+      display: block;
+      width: 100%;
+      height: auto;
+      pointer-events: none;
+      -webkit-user-drag: none;
+    }
+    .ba-after {
+      position: absolute;
+      top: 0; left: 0;
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .ba-after img {
+      width: auto;
+      height: 100%;
+      max-width: none;
+      position: absolute;
+      top: 0; left: 0;
+    }
+
+    /* Labels */
+    .ba-label {
+      position: absolute;
+      top: 10px;
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .ba-label-before { left: 10px;  background: #8B2500; }
+    .ba-label-after  { right: 10px; background: #1a5c2a; }
+
+    /* Divider line */
+    .ba-divider-line {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 3px; height: 100%;
+      background: var(--yellow);
+      pointer-events: none;
+      box-shadow: 0 0 12px rgba(240,184,0,0.4);
+      z-index: 6;
+    }
+
+    /* Handle */
+    .ba-handle {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px; height: 44px;
+      background: var(--yellow);
+      border-radius: 0;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 4px 20px rgba(0,0,0,0.6);
+      pointer-events: none;
+      z-index: 10;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    }
+    .ba-handle svg { width: 20px; height: 20px; }
+
+    /* Fullscreen button */
+    .ba-fullscreen-btn {
+      position: absolute;
+      bottom: 10px; right: 10px;
+      z-index: 15;
+      width: 34px; height: 34px;
+      background: rgba(0,0,0,0.75);
+      border: 1px solid rgba(240,184,0,0.4);
+      border-radius: 0;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .ba-fullscreen-btn:hover { background: rgba(240,184,0,0.25); border-color: var(--yellow); }
+    .ba-fullscreen-btn:active { opacity: 0.7; }
+    .ba-fullscreen-btn svg { width: 16px; height: 16px; stroke: var(--yellow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── IDLE GUIDE ── */
+    .ba-guide {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+      transition: opacity 0.5s ease;
+    }
+    .ba-guide.hidden { opacity: 0; pointer-events: none; }
+
+    .ba-guide-pill {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -68px);
+      background: rgba(0,0,0,0.82);
+      border: 1px solid var(--yellow-border);
+      border-radius: 0;
+      padding: 7px 18px;
+      display: flex; align-items: center; gap: 8px;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      animation: guidePop 0.4s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    .ba-guide-pill .arrow { color: var(--yellow); font-size: 1rem; }
+
+    .ba-guide-hand {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, 14px);
+      font-size: 1.9rem;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+      animation: guidePop 0.4s 0.1s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    @keyframes guidePop {
+      from { opacity: 0; transform: translate(-50%, 28px) scale(0.7); }
+      to   { opacity: 1; transform: translate(-50%, 14px) scale(1); }
+    }
+
+    /* ── FULLSCREEN MODAL ── */
+    .fs-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.97);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .fs-modal.open { opacity: 1; pointer-events: all; }
+
+    .fs-topbar {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px 8px;
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .fs-title-text {
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: var(--text-dim);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .fs-close-btn {
+      width: 38px; height: 38px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border2);
+      border-radius: 0;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    .fs-close-btn:hover { background: rgba(200,30,30,0.35); border-color: #c00; }
+    .fs-close-btn:active { opacity: 0.7; }
+    .fs-close-btn svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+    .fs-content {
+      flex: 1;
+      width: 100%;
+      max-width: 1200px;
+      padding: 0 16px 16px;
+      display: flex;
+      align-items: center;
+      min-height: 0;
+    }
+
+    #fs-slider {
+      border-radius: 0;
+      width: 100%;
+      max-height: calc(100vh - 90px);
+    }
+    #fs-slider img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: calc(100vh - 90px);
+      object-fit: contain;
+    }
+
+    /* ── INFO CARDS ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .info-card {
+      background: var(--bg2);
+      padding: 20px 12px;
+      text-align: center;
+      border-left: 3px solid transparent;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .info-card:hover { border-left-color: var(--yellow); background: var(--bg3); }
+    .info-card .ic-icon {
+      width: 32px; height: 32px;
+      margin: 0 auto 10px;
+    }
+    .info-card .ic-icon svg {
+      width: 100%; height: 100%;
+      stroke: var(--yellow); fill: none;
+      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .info-card .ic-label {
+      font-size: 0.62rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+    }
+    .info-card .ic-value {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── GALLERY ── */
+    .gallery-section { display: flex; flex-direction: column; gap: 12px; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+      background: var(--border);
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border: none;
+      cursor: zoom-in;
+      aspect-ratio: 16/9;
+      background: #0d0d0d;
+      transition: opacity 0.2s;
+    }
+    .gallery-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid transparent;
+      transition: border-color 0.2s;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .gallery-item:hover::after { border-color: var(--yellow); }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+      transition: transform 0.3s;
+    }
+    .gallery-item:hover img { transform: scale(1.03); }
+    .gallery-item .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 1;
+    }
+    .gallery-item:hover .gallery-overlay { background: rgba(0,0,0,0.3); }
+    .gallery-overlay svg {
+      opacity: 0;
+      transition: opacity 0.2s;
+      width: 34px; height: 34px;
+      stroke: var(--yellow); fill: none; stroke-width: 1.8;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.8));
+    }
+    .gallery-item:hover .gallery-overlay svg { opacity: 1; }
+    .gallery-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      color: #ccc;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 20px 10px 8px;
+      text-align: center;
+      z-index: 1;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0,0,0,0.97);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+    .lightbox.open { opacity: 1; pointer-events: all; }
+    .lightbox img {
+      max-width: 95vw;
+      max-height: 92vh;
+      object-fit: contain;
+      border-radius: 0;
+      box-shadow: 0 0 0 1px var(--border2), 0 10px 60px rgba(0,0,0,0.9);
+      display: block;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border2);
+      border-radius: 0;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .lightbox-close:hover { background: rgba(200,30,30,0.35); border-color: #c00; }
+    .lightbox-close svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+    /* Extra photos grid */
+    .extra-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+      background: var(--border);
+    }
+    .extra-item { aspect-ratio: 4/3; }
+
+    /* Final result highlight */
+    .final-item::after { border-color: rgba(240,184,0,0.3) !important; }
+    .final-item:hover::after { border-color: var(--yellow) !important; }
+    .final-caption {
+      background: linear-gradient(transparent, rgba(100,60,0,0.9)) !important;
+      color: #f0c050 !important;
+    }
+
+    @media (max-width: 600px) {
+      .gallery-grid { grid-template-columns: 1fr; gap: 3px; }
+      .gallery-item { aspect-ratio: 16/9; }
+      .extra-grid { grid-template-columns: 1fr; }
+      .extra-item { aspect-ratio: 4/3; }
+    }
+    @media (min-width: 601px) and (max-width: 800px) {
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-item:last-child { grid-column: 1 / -1; max-width: 60%; margin: 0 auto; width: 100%; }
+    }
+
+    /* ── ADDRESS ── */
+    .address-section {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .address-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 36px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .address-label {
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .address-label::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 14px;
+      background: var(--yellow);
+    }
+    .address-text {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+    .address-text svg {
+      width: 18px; height: 18px;
+      stroke: var(--yellow);
+      flex-shrink: 0;
+    }
+    .map-tabs {
+      display: flex;
+      gap: 2px;
+    }
+    .map-tab {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      color: var(--text-dim);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .map-tab.active {
+      background: var(--yellow);
+      color: #0a0a0a;
+      border-color: var(--yellow);
+    }
+    .map-tab:not(.active):hover {
+      background: var(--bg2);
+      color: var(--text);
+      border-color: var(--yellow-border);
+    }
+
+    .address-map {
+      width: 100%;
+      border: 1px solid var(--border2);
+      border-left: 3px solid var(--yellow);
+      overflow: hidden;
+      line-height: 0;
+    }
+    .address-map iframe {
+      display: block;
+      filter: grayscale(0.3) brightness(0.85);
+    }
+    @media (max-width: 600px) {
+      .address-map iframe { height: 260px; }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #080808;
+      border-top: 3px solid var(--yellow);
+      padding: 32px 20px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .footer-copy {
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .footer-contact {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-left: 3px solid var(--yellow);
+      padding: 12px 24px;
+    }
+    .footer-contact .fc-label {
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .footer-contact a {
+      color: #0a0a0a;
+      font-weight: 900;
+      font-size: 1rem;
+      text-decoration: none;
+      letter-spacing: 1px;
+      background: var(--yellow);
+      padding: 7px 20px;
+      transition: opacity 0.2s;
+      display: inline-block;
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    }
+    .footer-contact a:hover { opacity: 0.85; }
+    .footer-dev {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+    }
+    .footer-dev a {
+      color: var(--yellow);
+      text-decoration: none;
+      font-weight: 700;
+      border-bottom: 1px solid var(--yellow-border);
+      transition: color 0.2s;
+    }
+    .footer-dev a:hover { color: #ffe066; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      .header-inner { padding: 26px 0 30px; }
+      main { padding: 28px 12px 52px; gap: 40px; }
+      .ba-handle { width: 38px; height: 38px; }
+      .ba-handle svg { width: 17px; height: 17px; }
+      .ba-label { font-size: 0.6rem; padding: 3px 8px; top: 8px; }
+      .ba-label-before { left: 8px; }
+      .ba-label-after  { right: 8px; }
+      .ba-fullscreen-btn { width: 30px; height: 30px; bottom: 8px; right: 8px; }
+      .ba-fullscreen-btn svg { width: 13px; height: 13px; }
+      .ba-guide-pill { font-size: 0.7rem; padding: 5px 12px; transform: translate(-50%, -56px); }
+      .ba-guide-hand { font-size: 1.6rem; }
+      .section-title { font-size: 0.7rem; }
+      .info-grid { grid-template-columns: repeat(2, 1fr); }
+      .fs-topbar { padding: 10px 12px 6px; }
+    }
+
+    @media (max-width: 380px) {
+      header h1 { font-size: 1.35rem; }
+      .info-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="badge">Выполненная работа</div>
+    <h1>Пескоструйная очистка<br><span>кирпичной кладки</span></h1>
+  </div>
+</header>
+
+<div class="divider"><span></span></div>
+
+<main>
+
+  <!-- FRONT SIDE -->
+  <div class="slider-section">
+    <div class="section-title">
+      <div class="icon">01</div>
+      Передняя сторона
+      <span class="num">01 / 03</span>
+    </div>
+    <div class="ba-wrapper" id="slider1">
+      <img src="images/after-FrontSide.png"  alt="После — передняя" id="base-img-1" />
+      <div class="ba-after" id="clip-1">
+        <img src="images/before-FrontSide.png" alt="До — передняя" id="over-img-1" />
+      </div>
+      <div class="ba-label ba-label-before">До</div>
+      <div class="ba-label ba-label-after">После</div>
+      <div class="ba-divider-line" id="line1"></div>
+      <div class="ba-handle" id="handle1">
+        <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      </div>
+      <button class="ba-fullscreen-btn" data-idx="0" aria-label="На весь экран">
+        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      </button>
+      <div class="ba-guide hidden" id="guide1">
+        <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
+        <div class="ba-guide-hand" id="guide-hand1">↕</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BACK SIDE -->
+  <div class="slider-section">
+    <div class="section-title">
+      <div class="icon">02</div>
+      Задняя сторона
+      <span class="num">02 / 03</span>
+    </div>
+    <div class="ba-wrapper" id="slider2">
+      <img src="images/after-BackSide.png"  alt="После — задняя" id="base-img-2" />
+      <div class="ba-after" id="clip-2">
+        <img src="images/before-backSide.png" alt="До — задняя" id="over-img-2" />
+      </div>
+      <div class="ba-label ba-label-before">До</div>
+      <div class="ba-label ba-label-after">После</div>
+      <div class="ba-divider-line" id="line2"></div>
+      <div class="ba-handle" id="handle2">
+        <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      </div>
+      <button class="ba-fullscreen-btn" data-idx="1" aria-label="На весь экран">
+        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      </button>
+      <div class="ba-guide hidden" id="guide2">
+        <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
+        <div class="ba-guide-hand" id="guide-hand2">↕</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRICK CLOSE-UP -->
+  <div class="slider-section">
+    <div class="section-title">
+      <div class="icon">03</div>
+      Кирпич крупным планом
+      <span class="num">03 / 03</span>
+    </div>
+    <div class="ba-wrapper" id="slider3">
+      <img src="images/after-brick.png"  alt="После — кирпич" id="base-img-3" />
+      <div class="ba-after" id="clip-3">
+        <img src="images/before-brick.png" alt="До — кирпич" id="over-img-3" />
+      </div>
+      <div class="ba-label ba-label-before">До</div>
+      <div class="ba-label ba-label-after">После</div>
+      <div class="ba-divider-line" id="line3"></div>
+      <div class="ba-handle" id="handle3">
+        <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      </div>
+      <button class="ba-fullscreen-btn" data-idx="2" aria-label="На весь экран">
+        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+      </button>
+      <div class="ba-guide hidden" id="guide3">
+        <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
+        <div class="ba-guide-hand" id="guide-hand3">↕</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXTRA PHOTOS -->
+  <div class="gallery-section">
+    <div class="section-title">
+      <div class="icon"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+      Дополнительные фото
+    </div>
+    <div class="extra-grid">
+      <div class="gallery-item extra-item" data-src="images/brickSidesCompared.jpg">
+        <img src="images/brickSidesCompared.jpg" alt="Сравнение сторон кирпича" loading="lazy" />
+        <div class="gallery-overlay">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </div>
+        <div class="gallery-caption">Сравнение сторон кирпича</div>
+      </div>
+      <div class="gallery-item extra-item final-item" data-src="images/finallyDonedBrick.jpg">
+        <img src="images/finallyDonedBrick.jpg" alt="Итоговый результат" loading="lazy" />
+        <div class="gallery-overlay">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </div>
+        <div class="gallery-caption final-caption">Итоговый результат — покрашен и готов</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <div class="gallery-section">
+    <div class="section-title">
+      <div class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
+      Галерея коллажей
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item" data-src="images/collaje-FrontSide.jpg">
+        <img src="images/collaje-FrontSide.jpg" alt="Коллаж — передняя сторона" loading="lazy" />
+        <div class="gallery-overlay">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </div>
+        <div class="gallery-caption">Передняя сторона</div>
+      </div>
+      <div class="gallery-item" data-src="images/collage-BackSide.jpg">
+        <img src="images/collage-BackSide.jpg" alt="Коллаж — задняя сторона" loading="lazy" />
+        <div class="gallery-overlay">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </div>
+        <div class="gallery-caption">Задняя сторона</div>
+      </div>
+      <div class="gallery-item" data-src="images/collage-Brick.jpg">
+        <img src="images/collage-Brick.jpg" alt="Коллаж — кирпич" loading="lazy" />
+        <div class="gallery-overlay">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </div>
+        <div class="gallery-caption">Кирпич крупным планом</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO CARDS -->
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="ic-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+      <div class="ic-label">Метод</div>
+      <div class="ic-value">Пескоструй</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="9" height="5"/><rect x="13" y="4" width="9" height="5"/><rect x="2" y="11" width="6" height="5"/><rect x="10" y="11" width="12" height="5"/><rect x="2" y="18" width="10" height="4"/><rect x="14" y="18" width="8" height="4"/></svg></div>
+      <div class="ic-label">Материал</div>
+      <div class="ic-value">Кирпичная кладка</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="ic-label">Результат</div>
+      <div class="ic-value">Очистка выполнена</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+      <div class="ic-label">Ракурсы</div>
+      <div class="ic-value">Фасад + тыльная</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── ADDRESS ── -->
+<section class="address-section">
+  <div class="address-inner">
+    <div class="address-label">Место выполнения работ</div>
+    <div class="address-text">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      ул. Темерницкая, 1 — Ростов-на-Дону
+    </div>
+    <div class="map-tabs">
+      <button class="map-tab active">Карта</button>
+      <a class="map-tab" href="https://yandex.ru/maps/?text=Темерницкая+1%2C+Ворошиловский+район%2C+Ростов-на-Дону&l=stv" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;vertical-align:middle;margin-right:5px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Панорама
+      </a>
+    </div>
+    <div class="address-map">
+      <iframe id="map-frame"
+        src="https://yandex.ru/map-widget/v1/?text=Темерницкая%201%2C%20Ворошиловский%20район%2C%20Ростов-на-Дону&z=16&l=map"
+        width="100%" height="340" frameborder="0" allowfullscreen loading="lazy"
+        title="Место выполнения работ">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-copy">&copy; 2026 · Пескоструйные работы · <span style="white-space:nowrap">ск-третьяков.рф</span></div>
+  <div class="footer-contact">
+    <span class="fc-label">Исполнитель:</span>
+    <a href="tel:+79381553467">+7 938 155-34-67</a>
+  </div>
+  <div class="footer-dev">Разработка: <a href="https://tryander.space" target="_blank" rel="noopener">tryander.space</a></div>
+</footer>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img" src="" alt="" />
+  <button class="lightbox-close" id="lightbox-close">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+
+<!-- ── FULLSCREEN MODAL ── -->
+<div class="fs-modal" id="fs-modal" role="dialog" aria-modal="true">
+  <div class="fs-topbar">
+    <span class="fs-title-text" id="fs-modal-title"></span>
+    <button class="fs-close-btn" id="fs-close-btn" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="fs-content">
+    <div class="ba-wrapper" id="fs-slider">
+      <img id="fs-base-img" alt="" />
+      <div class="ba-after" id="fs-clip">
+        <img id="fs-over-img" alt="" />
+      </div>
+      <div class="ba-label ba-label-before">До</div>
+      <div class="ba-label ba-label-after">После</div>
+      <div class="ba-divider-line" id="fs-line"></div>
+      <div class="ba-handle" id="fs-handle">
+        <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════
+   LIGHTBOX
+   ════════════════════════════════ */
+const lightbox     = document.getElementById('lightbox');
+const lightboxImg  = document.getElementById('lightbox-img');
+const lightboxClose= document.getElementById('lightbox-close');
+
+document.querySelectorAll('.gallery-item').forEach(item => {
+  item.addEventListener('click', () => {
+    lightboxImg.src = item.dataset.src;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+});
+
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+lightboxClose.addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLightbox(); closeFullscreen(); } });
+
+/* ════════════════════════════════
+   SLIDER FACTORY
+   ════════════════════════════════ */
+const sliders = [];
+let userInteracted = false;
+let anyDragging = false;
+
+function makeSlider(wrapperId, clipId, lineId, handleId, overImgId, guideId, guideHandId) {
+  const wrapper  = document.getElementById(wrapperId);
+  const clip     = document.getElementById(clipId);
+  const line     = document.getElementById(lineId);
+  const handle   = document.getElementById(handleId);
+  const overImg  = document.getElementById(overImgId);
+  const guide    = guideId    ? document.getElementById(guideId)    : null;
+  const guideHand= guideHandId? document.getElementById(guideHandId): null;
+
+  let active = false;
+  let pos = 50;
+
+  function setPos(pct) {
+    pct = Math.max(2, Math.min(98, pct));
+    pos = pct;
+    clip.style.width    = pct + '%';
+    line.style.left     = pct + '%';
+    handle.style.left   = pct + '%';
+    overImg.style.width = (100 / (pct / 100)) + '%';
+    if (guideHand) guideHand.style.left = pct + '%';
+  }
+
+  function getPct(clientX) {
+    const r = wrapper.getBoundingClientRect();
+    return ((clientX - r.left) / r.width) * 100;
+  }
+
+  function onInteract() {
+    if (!userInteracted) {
+      userInteracted = true;
+      sliders.forEach(s => s.guide && s.guide.classList.add('hidden'));
+      stopIdleAnim();
+    }
+  }
+
+  /* Mouse */
+  wrapper.addEventListener('mousedown', e => {
+    if (e.target.closest('.ba-fullscreen-btn')) return; // ignore fullscreen btn
+    onInteract();
+    active = true;
+    anyDragging = true;
+    setPos(getPct(e.clientX));
+  });
+  window.addEventListener('mousemove', e => { if (active) setPos(getPct(e.clientX)); });
+  window.addEventListener('mouseup',   () => {
+    active = false;
+    // Delay clearing so the click handler (which fires after mouseup) sees the flag
+    setTimeout(() => { anyDragging = false; }, 50);
+  });
+
+  /* Touch — prevent page scroll while dragging */
+  wrapper.addEventListener('touchstart', e => {
+    if (e.target.closest('.ba-fullscreen-btn')) return; // ignore fullscreen btn
+    onInteract();
+    active = true;
+    setPos(getPct(e.touches[0].clientX));
+  }, { passive: true });
+
+  wrapper.addEventListener('touchmove', e => {
+    if (!active) return;
+    e.preventDefault(); // stop page from scrolling
+    setPos(getPct(e.touches[0].clientX));
+  }, { passive: false });
+
+  window.addEventListener('touchend',   () => { active = false; });
+  window.addEventListener('touchcancel',() => { active = false; });
+
+  setPos(50);
+
+  const state = { setPos, guide, guideHand, getPos: () => pos };
+  sliders.push(state);
+  return state;
+}
+
+/* ════════════════════════════════
+   IDLE ANIMATION
+   ════════════════════════════════ */
+let idleRaf   = null;
+let idleStart = null;
+
+function easeInOutSine(t) { return -(Math.cos(Math.PI * t) - 1) / 2; }
+
+function getAnimPos(t) {
+  if (t < 0.25) return 50 - 22 * easeInOutSine(t / 0.25);
+  if (t < 0.5)  return 28 + 22 * easeInOutSine((t - 0.25) / 0.25);
+  if (t < 0.75) return 50 + 22 * easeInOutSine((t - 0.5)  / 0.25);
+  return              72 - 22 * easeInOutSine((t - 0.75) / 0.25);
+}
+
+const CYCLE_MS = 2200;
+
+function idleLoop(ts) {
+  if (userInteracted) return;
+  if (!idleStart) idleStart = ts;
+  const t = ((ts - idleStart) % CYCLE_MS) / CYCLE_MS;
+  if (sliders[0]) sliders[0].setPos(getAnimPos(t));
+  idleRaf = requestAnimationFrame(idleLoop);
+}
+
+function stopIdleAnim() {
+  if (idleRaf) { cancelAnimationFrame(idleRaf); idleRaf = null; }
+}
+
+/* ════════════════════════════════
+   FULLSCREEN MODAL
+   ════════════════════════════════ */
+const fsModal    = document.getElementById('fs-modal');
+const fsTitle    = document.getElementById('fs-modal-title');
+const fsCloseBtn = document.getElementById('fs-close-btn');
+const fsBaseImg  = document.getElementById('fs-base-img');
+const fsOverImg  = document.getElementById('fs-over-img');
+let fsSliderState = null;
+
+const sliderMeta = [
+  {
+    title: 'Передняя сторона',
+    baseImg: 'images/after-FrontSide.png',
+    overImg: 'images/before-FrontSide.png'
+  },
+  {
+    title: 'Задняя сторона',
+    baseImg: 'images/after-BackSide.png',
+    overImg: 'images/before-backSide.png'
+  },
+  {
+    title: 'Кирпич крупным планом',
+    baseImg: 'images/after-brick.png',
+    overImg: 'images/before-brick.png'
+  }
+];
+
+function openFullscreen(idx) {
+  const meta = sliderMeta[idx];
+  fsTitle.textContent = meta.title;
+  fsBaseImg.src = meta.baseImg;
+  fsOverImg.src = meta.overImg;
+
+  // re-init the modal slider fresh
+  if (fsSliderState) {
+    // remove from sliders array to avoid conflicts
+    const i = sliders.indexOf(fsSliderState);
+    if (i > -1) sliders.splice(i, 1);
+  }
+  fsSliderState = makeSlider('fs-slider','fs-clip','fs-line','fs-handle','fs-over-img', null, null);
+  // wait for image to paint then set 50%
+  requestAnimationFrame(() => fsSliderState.setPos(50));
+
+  fsModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFullscreen() {
+  fsModal.classList.remove('open');
+  document.body.style.overflow = '';
+  // reset main sliders to centre
+  sliders.forEach(s => { if (s !== fsSliderState) s.setPos(50); });
+}
+
+fsCloseBtn.addEventListener('click', closeFullscreen);
+
+// Close on backdrop click (anywhere outside the slider and topbar)
+fsModal.addEventListener('click', e => {
+  if (anyDragging) return; // ignore click after drag
+  if (!e.target.closest('#fs-slider') && !e.target.closest('.fs-topbar')) closeFullscreen();
+});
+
+// Wire up fullscreen buttons
+document.querySelectorAll('.ba-fullscreen-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    openFullscreen(+btn.dataset.idx);
+  });
+});
+
+/* ════════════════════════════════
+   INIT
+   ════════════════════════════════ */
+window.addEventListener('load', () => {
+  makeSlider('slider1','clip-1','line1','handle1','over-img-1','guide1','guide-hand1');
+  makeSlider('slider2','clip-2','line2','handle2','over-img-2','guide2','guide-hand2');
+  makeSlider('slider3','clip-3','line3','handle3','over-img-3','guide3','guide-hand3');
+
+  setTimeout(() => {
+    if (!userInteracted) {
+      sliders[0].guide.classList.remove('hidden');
+      sliders[0].guideHand.style.left = '50%';
+      idleStart = null;
+      idleRaf = requestAnimationFrame(idleLoop);
+    }
+  }, 2500);
+});
+</script>
+</body>
+</html>

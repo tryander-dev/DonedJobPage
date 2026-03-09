@@ -3,29 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Пескоструйная обработка кирпича</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    * {
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
+  <!-- Security headers (meta) -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data:;
+    font-src 'self';
+    connect-src 'self' https://formspree.io;
+    frame-src 'none';
+    frame-ancestors 'none';
+    form-action 'self' https://formspree.io;
+    base-uri 'self';
+    object-src 'none';
+  " />
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
+
+  <title>СК-Третьяков — Пескоструй, Кровля, Фасад</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --yellow: #f0b800;
-      --yellow-dim: rgba(240,184,0,0.15);
-      --yellow-border: rgba(240,184,0,0.35);
-      --bg: #111111;
+      --yellow-dim: rgba(240,184,0,0.12);
+      --yellow-border: rgba(240,184,0,0.3);
+      --bg:  #111111;
       --bg2: #181818;
-      --bg3: #202020;
+      --bg3: #1e1e1e;
+      --bg4: #252525;
       --border: #2a2a2a;
       --border2: #333;
       --text: #e0e0e0;
-      --text-dim: #777;
+      --text-dim: #888;
+      --text-muted: #555;
+      --green: #2ecc71;
+      --red: #e74c3c;
     }
+
+    html { scroll-behavior: smooth; }
 
     body {
       background: var(--bg);
@@ -35,1159 +54,1618 @@
       overflow-x: hidden;
     }
 
-    /* ── HEADER ── */
-    header {
-      background: #0a0a0a;
-      padding: 0 20px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      border-bottom: 3px solid var(--yellow);
+    /* ══════════════════════════════════
+       NAV
+    ══════════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .nav-logo-badge {
+      background: var(--yellow);
+      color: #0a0a0a;
+      font-weight: 900;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      padding: 5px 12px;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    }
+    .nav-logo-text {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--yellow); }
+    .nav-cta {
+      background: var(--yellow);
+      color: #0a0a0a !important;
+      padding: 7px 18px;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+      font-weight: 900 !important;
+      transition: opacity 0.2s !important;
+    }
+    .nav-cta:hover { opacity: 0.85; color: #0a0a0a !important; }
+
+    /* Hamburger */
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .nav-burger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--text);
+      transition: 0.3s;
     }
 
-    /* hazard-stripe top bar */
-    header::before {
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-burger { display: flex; }
+    }
+
+    /* ══════════════════════════════════
+       HERO
+    ══════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 20px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* hazard stripe top */
+    .hero::before {
       content: '';
-      display: block;
-      height: 7px;
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
       background: repeating-linear-gradient(
         -55deg,
-        var(--yellow) 0px,
-        var(--yellow) 12px,
-        #0a0a0a 12px,
-        #0a0a0a 24px
+        var(--yellow) 0px, var(--yellow) 12px,
+        #0a0a0a 12px, #0a0a0a 24px
       );
     }
 
-    /* subtle concrete texture */
-    header::after {
+    /* grid overlay */
+    .hero::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%230a0a0a'/%3E%3Crect width='1' height='1' x='0' y='0' fill='%23ffffff' fill-opacity='0.025'/%3E%3Crect width='1' height='1' x='2' y='2' fill='%23ffffff' fill-opacity='0.015'/%3E%3C/svg%3E");
+      background-image:
+        linear-gradient(rgba(240,184,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(240,184,0,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
       pointer-events: none;
     }
 
-    .header-inner {
-      position: relative;
-      z-index: 1;
-      padding: 36px 0 40px;
-    }
-
-    header .badge {
+    .hero-badge {
       display: inline-block;
       background: var(--yellow);
       color: #0a0a0a;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: 900;
       letter-spacing: 3px;
       text-transform: uppercase;
       padding: 5px 20px;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
       clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+      position: relative; z-index: 1;
     }
-
-    header h1 {
-      font-size: clamp(1.6rem, 5vw, 3rem);
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 4.5rem);
       font-weight: 900;
-      letter-spacing: 3px;
-      line-height: 1.15;
+      letter-spacing: 2px;
       text-transform: uppercase;
+      line-height: 1.1;
+      position: relative; z-index: 1;
+      margin-bottom: 10px;
     }
-    header h1 span { color: var(--yellow); }
+    .hero h1 span { color: var(--yellow); }
+    .hero-sub {
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      color: var(--text-dim);
+      letter-spacing: 1px;
+      margin-bottom: 36px;
+      position: relative; z-index: 1;
+      max-width: 580px;
+    }
 
-    /* ── DIVIDER ── */
-    .divider {
+    .hero-btns {
       display: flex;
-      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative; z-index: 1;
+      margin-bottom: 60px;
+    }
+    .btn-primary {
+      background: var(--yellow);
+      color: #0a0a0a;
+      font-weight: 900;
+      font-size: 0.82rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      text-decoration: none;
+      clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+      transition: opacity 0.2s, transform 0.15s;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 13px 32px;
+      border: 1px solid var(--border2);
+      text-decoration: none;
+      clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+      transition: border-color 0.2s, color 0.2s;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .btn-secondary:hover { border-color: var(--yellow); color: var(--yellow); }
+
+    /* stats row */
+    .hero-stats {
+      display: flex;
       gap: 0;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0;
-      height: 3px;
-      background: var(--border);
+      position: relative; z-index: 1;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--yellow);
     }
-    .divider span { display: none; }
-
-    /* ── MAIN ── */
-    main {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 40px 16px 64px;
-      display: flex;
-      flex-direction: column;
-      gap: 52px;
+    .hero-stat {
+      padding: 16px 28px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat-num {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--yellow);
+      line-height: 1;
+    }
+    .hero-stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    @media (max-width: 500px) {
+      .hero-stat { padding: 12px 14px; }
+      .hero-stat-num { font-size: 1.2rem; }
     }
 
-    /* ── SLIDER SECTION ── */
-    .slider-section { display: flex; flex-direction: column; gap: 12px; }
+    /* ══════════════════════════════════
+       SECTION WRAPPER
+    ══════════════════════════════════ */
+    section { padding: 80px 20px; }
+    .container { max-width: 1100px; margin: 0 auto; }
 
-    .section-title {
+    .section-head {
       display: flex;
       align-items: center;
       gap: 14px;
-      font-size: 0.78rem;
+      margin-bottom: 40px;
+    }
+    .section-head-bar {
+      width: 4px;
+      height: 36px;
+      background: var(--yellow);
+      flex-shrink: 0;
+    }
+    .section-head h2 {
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
       font-weight: 900;
-      color: var(--text);
-      letter-spacing: 3px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
+    }
+    .section-head h2 span { color: var(--yellow); }
+    .section-head p {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+      margin-top: 4px;
     }
 
-    .section-title .icon {
-      width: 34px; height: 32px;
-      background: var(--yellow);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.72rem;
-      font-weight: 900;
-      color: #0a0a0a;
-      letter-spacing: 0;
-      flex-shrink: 0;
-      clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+    /* ══════════════════════════════════
+       SERVICES
+    ══════════════════════════════════ */
+    #services { background: var(--bg); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
     }
-    .section-title .icon svg {
-      width: 16px; height: 16px;
-      stroke: #0a0a0a; fill: none;
+    @media (max-width: 720px) {
+      .services-grid { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 721px) and (max-width: 960px) {
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .service-card {
+      background: var(--bg2);
+      padding: 28px 24px;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--yellow);
+      transition: height 0.3s;
+    }
+    .service-card:hover { background: var(--bg3); }
+    .service-card:hover::before { height: 100%; }
+
+    .service-icon {
+      width: 44px; height: 44px;
+      background: var(--yellow-dim);
+      border: 1px solid var(--yellow-border);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    }
+    .service-icon svg {
+      width: 20px; height: 20px;
+      stroke: var(--yellow); fill: none;
       stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
+    .service-card h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .service-card p {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+    .service-price {
+      margin-top: 14px;
+      font-size: 0.7rem;
+      color: var(--yellow);
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
 
-    .section-title .num {
-      font-size: 0.65rem;
+    /* ══════════════════════════════════
+       PORTFOLIO
+    ══════════════════════════════════ */
+    #portfolio { background: var(--bg2); }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .portfolio-card {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-left: 3px solid var(--yellow);
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s, transform 0.15s;
+      overflow: hidden;
+      position: relative;
+    }
+    .portfolio-card:hover {
+      border-color: var(--yellow);
+      transform: translateY(-3px);
+    }
+    .portfolio-card-thumb {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(20%);
+      transition: filter 0.3s;
+    }
+    .portfolio-card:hover .portfolio-card-thumb { filter: grayscale(0%); }
+    .portfolio-card-thumb-placeholder {
+      width: 100%; height: 180px;
+      background: var(--bg4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: var(--text-muted); letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .portfolio-card-body {
+      padding: 18px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .portfolio-card-tag {
+      font-size: 0.62rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
       color: var(--yellow);
       background: var(--yellow-dim);
       border: 1px solid var(--yellow-border);
       padding: 2px 10px;
-      margin-left: auto;
-      letter-spacing: 2px;
+      display: inline-block;
+      width: fit-content;
     }
-
-    /* ── BEFORE-AFTER SLIDER ── */
-    .ba-wrapper {
-      position: relative;
-      width: 100%;
-      border-radius: 0;
-      overflow: hidden;
-      box-shadow: 0 4px 40px rgba(0,0,0,0.7);
-      cursor: ew-resize;
-      user-select: none;
-      border: 1px solid var(--border2);
-      border-left: 3px solid var(--yellow);
-    }
-    .ba-wrapper img {
-      display: block;
-      width: 100%;
-      height: auto;
-      pointer-events: none;
-      -webkit-user-drag: none;
-    }
-    .ba-after {
-      position: absolute;
-      top: 0; left: 0;
-      width: 50%;
-      height: 100%;
-      overflow: hidden;
-    }
-    .ba-after img {
-      width: auto;
-      height: 100%;
-      max-width: none;
-      position: absolute;
-      top: 0; left: 0;
-    }
-
-    /* Labels */
-    .ba-label {
-      position: absolute;
-      top: 10px;
-      color: #fff;
-      font-size: 0.68rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      padding: 4px 12px;
-      border-radius: 0;
-      pointer-events: none;
-      z-index: 5;
-    }
-    .ba-label-before { left: 10px;  background: #8B2500; }
-    .ba-label-after  { right: 10px; background: #1a5c2a; }
-
-    /* Divider line */
-    .ba-divider-line {
-      position: absolute;
-      top: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 3px; height: 100%;
-      background: var(--yellow);
-      pointer-events: none;
-      box-shadow: 0 0 12px rgba(240,184,0,0.4);
-      z-index: 6;
-    }
-
-    /* Handle */
-    .ba-handle {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 44px; height: 44px;
-      background: var(--yellow);
-      border-radius: 0;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 0 3px rgba(0,0,0,0.5), 0 4px 20px rgba(0,0,0,0.6);
-      pointer-events: none;
-      z-index: 10;
-      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
-    }
-    .ba-handle svg { width: 20px; height: 20px; }
-
-    /* Fullscreen button */
-    .ba-fullscreen-btn {
-      position: absolute;
-      bottom: 10px; right: 10px;
-      z-index: 15;
-      width: 34px; height: 34px;
-      background: rgba(0,0,0,0.75);
-      border: 1px solid rgba(240,184,0,0.4);
-      border-radius: 0;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s, border-color 0.2s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .ba-fullscreen-btn:hover { background: rgba(240,184,0,0.25); border-color: var(--yellow); }
-    .ba-fullscreen-btn:active { opacity: 0.7; }
-    .ba-fullscreen-btn svg { width: 16px; height: 16px; stroke: var(--yellow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-    /* ── IDLE GUIDE ── */
-    .ba-guide {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 20;
-      transition: opacity 0.5s ease;
-    }
-    .ba-guide.hidden { opacity: 0; pointer-events: none; }
-
-    .ba-guide-pill {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -68px);
-      background: rgba(0,0,0,0.82);
-      border: 1px solid var(--yellow-border);
-      border-radius: 0;
-      padding: 7px 18px;
-      display: flex; align-items: center; gap: 8px;
-      color: #fff;
-      font-size: 0.78rem;
+    .portfolio-card-title {
+      font-size: 0.95rem;
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
-      white-space: nowrap;
-      animation: guidePop 0.4s cubic-bezier(.34,1.56,.64,1) both;
     }
-    .ba-guide-pill .arrow { color: var(--yellow); font-size: 1rem; }
-
-    .ba-guide-hand {
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, 14px);
-      font-size: 1.9rem;
-      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
-      animation: guidePop 0.4s 0.1s cubic-bezier(.34,1.56,.64,1) both;
+    .portfolio-card-desc {
+      font-size: 0.77rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      flex: 1;
     }
-
-    @keyframes guidePop {
-      from { opacity: 0; transform: translate(-50%, 28px) scale(0.7); }
-      to   { opacity: 1; transform: translate(-50%, 14px) scale(1); }
-    }
-
-    /* ── FULLSCREEN MODAL ── */
-    .fs-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: rgba(0,0,0,0.97);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-    .fs-modal.open { opacity: 1; pointer-events: all; }
-
-    .fs-topbar {
-      width: 100%;
-      max-width: 1200px;
+    .portfolio-card-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px 8px;
-      flex-shrink: 0;
-      border-bottom: 1px solid var(--border);
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
     }
-    .fs-title-text {
-      font-size: 0.72rem;
-      font-weight: 900;
-      color: var(--text-dim);
-      letter-spacing: 3px;
+    .portfolio-card-footer span {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
       text-transform: uppercase;
     }
-    .fs-close-btn {
-      width: 38px; height: 38px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid var(--border2);
-      border-radius: 0;
-      cursor: pointer;
+    .portfolio-card-arrow {
+      width: 28px; height: 28px;
+      background: var(--yellow-dim);
+      border: 1px solid var(--yellow-border);
       display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s, border-color 0.2s;
-      -webkit-tap-highlight-color: transparent;
-      flex-shrink: 0;
+      transition: background 0.2s;
     }
-    .fs-close-btn:hover { background: rgba(200,30,30,0.35); border-color: #c00; }
-    .fs-close-btn:active { opacity: 0.7; }
-    .fs-close-btn svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+    .portfolio-card:hover .portfolio-card-arrow { background: var(--yellow); }
+    .portfolio-card-arrow svg {
+      width: 14px; height: 14px;
+      stroke: var(--yellow);
+      fill: none; stroke-width: 2.5;
+      stroke-linecap: round; stroke-linejoin: round;
+      transition: stroke 0.2s;
+    }
+    .portfolio-card:hover .portfolio-card-arrow svg { stroke: #0a0a0a; }
 
-    .fs-content {
-      flex: 1;
-      width: 100%;
-      max-width: 1200px;
-      padding: 0 16px 16px;
-      display: flex;
-      align-items: center;
-      min-height: 0;
-    }
-
-    #fs-slider {
-      border-radius: 0;
-      width: 100%;
-      max-height: calc(100vh - 90px);
-    }
-    #fs-slider img {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: calc(100vh - 90px);
-      object-fit: contain;
+    /* coming soon card */
+    .portfolio-card-soon {
+      border-style: dashed;
+      border-left-style: solid;
+      opacity: 0.5;
+      pointer-events: none;
     }
 
-    /* ── INFO CARDS ── */
-    .info-grid {
+    /* ══════════════════════════════════
+       CALCULATOR
+    ══════════════════════════════════ */
+    #calculator { background: var(--bg); }
+
+    .calc-wrap {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: 1fr 1fr;
       gap: 2px;
       background: var(--border);
       border: 1px solid var(--border);
     }
-    .info-card {
+    @media (max-width: 720px) {
+      .calc-wrap { grid-template-columns: 1fr; }
+    }
+
+    .calc-panel {
       background: var(--bg2);
-      padding: 20px 12px;
-      text-align: center;
-      border-left: 3px solid transparent;
-      transition: border-color 0.2s, background 0.2s;
+      padding: 32px 28px;
     }
-    .info-card:hover { border-left-color: var(--yellow); background: var(--bg3); }
-    .info-card .ic-icon {
-      width: 32px; height: 32px;
-      margin: 0 auto 10px;
-    }
-    .info-card .ic-icon svg {
-      width: 100%; height: 100%;
-      stroke: var(--yellow); fill: none;
-      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
-    }
-    .info-card .ic-label {
-      font-size: 0.62rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
+
+    .calc-label {
+      font-size: 0.7rem;
+      font-weight: 700;
       letter-spacing: 2px;
-      margin-bottom: 5px;
-    }
-    .info-card .ic-value {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: 0.5px;
-    }
-
-    /* ── GALLERY ── */
-    .gallery-section { display: flex; flex-direction: column; gap: 12px; }
-
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3px;
-      background: var(--border);
-    }
-    .gallery-item {
-      position: relative;
-      overflow: hidden;
-      border: none;
-      cursor: zoom-in;
-      aspect-ratio: 16/9;
-      background: #0d0d0d;
-      transition: opacity 0.2s;
-    }
-    .gallery-item::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border: 2px solid transparent;
-      transition: border-color 0.2s;
-      pointer-events: none;
-      z-index: 2;
-    }
-    .gallery-item:hover::after { border-color: var(--yellow); }
-    .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      pointer-events: none;
-      transition: transform 0.3s;
-    }
-    .gallery-item:hover img { transform: scale(1.03); }
-    .gallery-item .gallery-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-      z-index: 1;
-    }
-    .gallery-item:hover .gallery-overlay { background: rgba(0,0,0,0.3); }
-    .gallery-overlay svg {
-      opacity: 0;
-      transition: opacity 0.2s;
-      width: 34px; height: 34px;
-      stroke: var(--yellow); fill: none; stroke-width: 1.8;
-      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.8));
-    }
-    .gallery-item:hover .gallery-overlay svg { opacity: 1; }
-    .gallery-caption {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      background: linear-gradient(transparent, rgba(0,0,0,0.85));
-      color: #ccc;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
       text-transform: uppercase;
-      padding: 20px 10px 8px;
-      text-align: center;
-      z-index: 1;
-    }
-
-    /* Lightbox */
-    .lightbox {
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      background: rgba(0,0,0,0.97);
+      color: var(--text-dim);
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.22s ease;
+      gap: 8px;
     }
-    .lightbox.open { opacity: 1; pointer-events: all; }
-    .lightbox img {
-      max-width: 95vw;
-      max-height: 92vh;
-      object-fit: contain;
-      border-radius: 0;
-      box-shadow: 0 0 0 1px var(--border2), 0 10px 60px rgba(0,0,0,0.9);
-      display: block;
+    .calc-label-dot {
+      width: 6px; height: 6px;
+      background: var(--yellow);
+      clip-path: polygon(2px 0%, 100% 0%, calc(100% - 2px) 100%, 0% 100%);
     }
-    .lightbox-close {
-      position: absolute;
-      top: 16px; right: 16px;
-      width: 40px; height: 40px;
-      background: rgba(255,255,255,0.07);
+
+    .calc-select {
+      width: 100%;
+      background: var(--bg3);
       border: 1px solid var(--border2);
-      border-radius: 0;
+      color: var(--text);
+      padding: 10px 14px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      appearance: none;
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s, border-color 0.2s;
+      outline: none;
+      transition: border-color 0.2s;
     }
-    .lightbox-close:hover { background: rgba(200,30,30,0.35); border-color: #c00; }
-    .lightbox-close svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+    .calc-select:focus { border-color: var(--yellow); }
 
-    /* Extra photos grid */
-    .extra-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3px;
+    .calc-slider-wrap { margin-bottom: 20px; }
+    .calc-slider-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .calc-slider-val {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--yellow);
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: var(--border2);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px; height: 18px;
+      background: var(--yellow);
+      clip-path: polygon(3px 0%, 100% 0%, calc(100% - 3px) 100%, 0% 100%);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+    .calc-divider-inner {
+      height: 1px;
       background: var(--border);
-    }
-    .extra-item { aspect-ratio: 4/3; }
-
-    /* Final result highlight */
-    .final-item::after { border-color: rgba(240,184,0,0.3) !important; }
-    .final-item:hover::after { border-color: var(--yellow) !important; }
-    .final-caption {
-      background: linear-gradient(transparent, rgba(100,60,0,0.9)) !important;
-      color: #f0c050 !important;
+      margin: 20px 0;
     }
 
-    @media (max-width: 600px) {
-      .gallery-grid { grid-template-columns: 1fr; gap: 3px; }
-      .gallery-item { aspect-ratio: 16/9; }
-      .extra-grid { grid-template-columns: 1fr; }
-      .extra-item { aspect-ratio: 4/3; }
-    }
-    @media (min-width: 601px) and (max-width: 800px) {
-      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-      .gallery-item:last-child { grid-column: 1 / -1; max-width: 60%; margin: 0 auto; width: 100%; }
-    }
-
-    /* ── ADDRESS ── */
-    .address-section {
+    /* result panel */
+    .calc-result-panel {
       background: var(--bg2);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    .address-inner {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 36px 16px;
+      padding: 32px 28px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      justify-content: space-between;
     }
-    .address-label {
-      font-size: 0.72rem;
-      font-weight: 900;
+    .calc-result-title {
+      font-size: 0.7rem;
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--text-dim);
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      margin-bottom: 20px;
     }
-    .address-label::before {
-      content: '';
-      display: inline-block;
-      width: 3px;
-      height: 14px;
-      background: var(--yellow);
-    }
-    .address-text {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: 0.5px;
-    }
-    .address-text svg {
-      width: 18px; height: 18px;
-      stroke: var(--yellow);
-      flex-shrink: 0;
-    }
-    .map-tabs {
-      display: flex;
-      gap: 2px;
-    }
-    .map-tab {
+
+    .calc-price-display {
       background: var(--bg3);
       border: 1px solid var(--border2);
-      color: var(--text-dim);
-      font-size: 0.68rem;
+      border-left: 3px solid var(--yellow);
+      padding: 20px 22px;
+      margin-bottom: 20px;
+    }
+    .calc-price-label {
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .calc-price-val {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      color: var(--yellow);
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+    .calc-price-note {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      letter-spacing: 1px;
+    }
+
+    .calc-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .calc-breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+    }
+    .calc-breakdown-row span:first-child { color: var(--text-dim); }
+    .calc-breakdown-row span:last-child { color: var(--text); font-weight: 600; }
+
+    .calc-disclaimer {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      letter-spacing: 0.5px;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    /* ══════════════════════════════════
+       REQUEST FORM
+    ══════════════════════════════════ */
+    #request { background: var(--bg2); }
+
+    .form-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    @media (max-width: 720px) {
+      .form-wrap { grid-template-columns: 1fr; }
+    }
+
+    .form-info-panel {
+      background: var(--bg3);
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .form-info-panel h3 {
+      font-size: 1.1rem;
       font-weight: 900;
       letter-spacing: 2px;
       text-transform: uppercase;
-      padding: 8px 20px;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
-      -webkit-tap-highlight-color: transparent;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
+      line-height: 1.3;
     }
-    .map-tab.active {
-      background: var(--yellow);
-      color: #0a0a0a;
-      border-color: var(--yellow);
-    }
-    .map-tab:not(.active):hover {
-      background: var(--bg2);
-      color: var(--text);
-      border-color: var(--yellow-border);
+    .form-info-panel h3 span { color: var(--yellow); }
+    .form-info-panel p {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.7;
     }
 
-    .address-map {
-      width: 100%;
-      border: 1px solid var(--border2);
-      border-left: 3px solid var(--yellow);
-      overflow: hidden;
-      line-height: 0;
-    }
-    .address-map iframe {
-      display: block;
-      filter: grayscale(0.3) brightness(0.85);
-    }
-    @media (max-width: 600px) {
-      .address-map iframe { height: 260px; }
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      background: #080808;
-      border-top: 3px solid var(--yellow);
-      padding: 32px 20px 28px;
+    .form-perks {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 16px;
+      gap: 12px;
     }
-    .footer-copy {
-      color: var(--text-dim);
-      font-size: 0.72rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-    .footer-contact {
+    .form-perk {
       display: flex;
       align-items: center;
       gap: 12px;
-      background: var(--bg2);
-      border: 1px solid var(--border2);
-      border-left: 3px solid var(--yellow);
-      padding: 12px 24px;
-    }
-    .footer-contact .fc-label {
+      font-size: 0.78rem;
       color: var(--text-dim);
-      font-size: 0.72rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
     }
-    .footer-contact a {
-      color: #0a0a0a;
-      font-weight: 900;
-      font-size: 1rem;
-      text-decoration: none;
-      letter-spacing: 1px;
+    .form-perk-dot {
+      width: 8px; height: 8px;
       background: var(--yellow);
-      padding: 7px 20px;
-      transition: opacity 0.2s;
-      display: inline-block;
+      clip-path: polygon(2px 0%, 100% 0%, calc(100% - 2px) 100%, 0% 100%);
+      flex-shrink: 0;
+    }
+
+    .form-contact-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+    .form-contact-row svg {
+      width: 16px; height: 16px;
+      stroke: var(--yellow); fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    /* form panel */
+    .form-input-panel {
+      background: var(--bg2);
+      padding: 40px 32px;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 7px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--yellow); }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: var(--text-muted); }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 480px) {
+      .form-row-2 { grid-template-columns: 1fr; }
+    }
+
+    .form-submit {
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    /* success state */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .form-success-icon {
+      width: 60px; height: 60px;
+      background: rgba(46,204,113,0.15);
+      border: 2px solid var(--green);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
       clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
     }
-    .footer-contact a:hover { opacity: 0.85; }
-    .footer-dev {
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      letter-spacing: 1px;
+    .form-success-icon svg {
+      width: 28px; height: 28px;
+      stroke: var(--green); fill: none;
+      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
     }
-    .footer-dev a {
+    .form-success h4 {
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      color: var(--green);
+    }
+    .form-success p {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ══════════════════════════════════
+       WHY US
+    ══════════════════════════════════ */
+    #why { background: var(--bg); }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+    .why-card {
+      background: var(--bg2);
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .why-num {
+      font-size: 2rem;
+      font-weight: 900;
       color: var(--yellow);
-      text-decoration: none;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .why-title {
+      font-size: 0.78rem;
       font-weight: 700;
-      border-bottom: 1px solid var(--yellow-border);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .why-desc {
+      font-size: 0.73rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ══════════════════════════════════
+       FOOTER
+    ══════════════════════════════════ */
+    footer {
+      background: #0a0a0a;
+      border-top: 1px solid var(--border);
+      padding: 40px 20px 28px;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .footer-brand-name {
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .footer-brand-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      max-width: 220px;
+      line-height: 1.6;
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
       transition: color 0.2s;
     }
-    .footer-dev a:hover { color: #ffe066; }
-
-    /* ── MOBILE ── */
-    @media (max-width: 600px) {
-      .header-inner { padding: 26px 0 30px; }
-      main { padding: 28px 12px 52px; gap: 40px; }
-      .ba-handle { width: 38px; height: 38px; }
-      .ba-handle svg { width: 17px; height: 17px; }
-      .ba-label { font-size: 0.6rem; padding: 3px 8px; top: 8px; }
-      .ba-label-before { left: 8px; }
-      .ba-label-after  { right: 8px; }
-      .ba-fullscreen-btn { width: 30px; height: 30px; bottom: 8px; right: 8px; }
-      .ba-fullscreen-btn svg { width: 13px; height: 13px; }
-      .ba-guide-pill { font-size: 0.7rem; padding: 5px 12px; transform: translate(-50%, -56px); }
-      .ba-guide-hand { font-size: 1.6rem; }
-      .section-title { font-size: 0.7rem; }
-      .info-grid { grid-template-columns: repeat(2, 1fr); }
-      .fs-topbar { padding: 10px 12px 6px; }
+    .footer-links a:hover { color: var(--yellow); }
+    .footer-divider {
+      height: 1px;
+      background: var(--border);
+    }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .footer-copy {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+    .footer-hazard {
+      height: 4px;
+      background: repeating-linear-gradient(
+        -55deg,
+        var(--yellow) 0px, var(--yellow) 8px,
+        #0a0a0a 8px, #0a0a0a 16px
+      );
+      margin-top: 8px;
     }
 
-    @media (max-width: 380px) {
-      header h1 { font-size: 1.35rem; }
-      .info-grid { grid-template-columns: 1fr 1fr; }
+    /* ══════════════════════════════════
+       SCROLL TO TOP
+    ══════════════════════════════════ */
+    #scroll-top {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 99;
+      width: 44px; height: 44px;
+      background: var(--yellow);
+      color: #0a0a0a;
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
     }
+    #scroll-top.visible { opacity: 1; pointer-events: auto; }
+    #scroll-top svg {
+      width: 18px; height: 18px;
+      stroke: #0a0a0a; fill: none;
+      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ══════════════════════════════════
+       UTILITIES
+    ══════════════════════════════════ */
+    .text-yellow { color: var(--yellow); }
+    .mt-4 { margin-top: 16px; }
+
+    /* mobile nav menu */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 60px; left: 0; right: 0;
+      background: rgba(10,10,10,0.97);
+      border-bottom: 1px solid var(--border);
+      z-index: 99;
+      padding: 20px 24px;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--yellow); }
+    .mobile-menu a:last-child { border-bottom: none; }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <div class="badge">Выполненная работа</div>
-    <h1>Пескоструйная очистка<br><span>кирпичной кладки</span></h1>
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#">
+      <span class="nav-logo-badge">СК</span>
+      <span class="nav-logo-text">Третьяков</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#services">Услуги</a></li>
+      <li><a href="#portfolio">Работы</a></li>
+      <li><a href="#calculator">Стоимость</a></li>
+      <li><a href="#why">О нас</a></li>
+      <li><a href="#request" class="nav-cta">Заявка</a></li>
+    </ul>
+    <button class="nav-burger" id="burger" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
   </div>
-</header>
+</nav>
 
-<div class="divider"><span></span></div>
+<!-- mobile menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#services" onclick="closeMobileMenu()">Услуги</a>
+  <a href="#portfolio" onclick="closeMobileMenu()">Работы</a>
+  <a href="#calculator" onclick="closeMobileMenu()">Стоимость</a>
+  <a href="#why" onclick="closeMobileMenu()">О нас</a>
+  <a href="#request" onclick="closeMobileMenu()">Оставить заявку →</a>
+</div>
 
-<main>
-
-  <!-- FRONT SIDE -->
-  <div class="slider-section">
-    <div class="section-title">
-      <div class="icon">01</div>
-      Передняя сторона
-      <span class="num">01 / 03</span>
-    </div>
-    <div class="ba-wrapper" id="slider1">
-      <img src="images/after-FrontSide.png"  alt="После — передняя" id="base-img-1" />
-      <div class="ba-after" id="clip-1">
-        <img src="images/before-FrontSide.png" alt="До — передняя" id="over-img-1" />
-      </div>
-      <div class="ba-label ba-label-before">До</div>
-      <div class="ba-label ba-label-after">После</div>
-      <div class="ba-divider-line" id="line1"></div>
-      <div class="ba-handle" id="handle1">
-        <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-      </div>
-      <button class="ba-fullscreen-btn" data-idx="0" aria-label="На весь экран">
-        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-      </button>
-      <div class="ba-guide hidden" id="guide1">
-        <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
-        <div class="ba-guide-hand" id="guide-hand1">↕</div>
-      </div>
-    </div>
+<!-- ══ HERO ══ -->
+<section class="hero" id="home">
+  <div class="hero-badge">Строительная Компания</div>
+  <h1>СК&thinsp;<span>Третьяков</span></h1>
+  <p class="hero-sub">Пескоструйная обработка, кровельные и фасадные работы — профессионально и в срок.</p>
+  <div class="hero-btns">
+    <a href="#request" class="btn-primary">Оставить заявку</a>
+    <a href="#portfolio" class="btn-secondary">Наши работы</a>
   </div>
-
-  <!-- BACK SIDE -->
-  <div class="slider-section">
-    <div class="section-title">
-      <div class="icon">02</div>
-      Задняя сторона
-      <span class="num">02 / 03</span>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">20+</div>
+      <div class="hero-stat-label">Лет опыта</div>
     </div>
-    <div class="ba-wrapper" id="slider2">
-      <img src="images/after-BackSide.png"  alt="После — задняя" id="base-img-2" />
-      <div class="ba-after" id="clip-2">
-        <img src="images/before-backSide.png" alt="До — задняя" id="over-img-2" />
-      </div>
-      <div class="ba-label ba-label-before">До</div>
-      <div class="ba-label ba-label-after">После</div>
-      <div class="ba-divider-line" id="line2"></div>
-      <div class="ba-handle" id="handle2">
-        <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-      </div>
-      <button class="ba-fullscreen-btn" data-idx="1" aria-label="На весь экран">
-        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-      </button>
-      <div class="ba-guide hidden" id="guide2">
-        <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
-        <div class="ba-guide-hand" id="guide-hand2">↕</div>
-      </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">120+</div>
+      <div class="hero-stat-label">Объектов</div>
     </div>
-  </div>
-
-  <!-- BRICK CLOSE-UP -->
-  <div class="slider-section">
-    <div class="section-title">
-      <div class="icon">03</div>
-      Кирпич крупным планом
-      <span class="num">03 / 03</span>
+    <div class="hero-stat">
+      <div class="hero-stat-num">100%</div>
+      <div class="hero-stat-label">Гарантия</div>
     </div>
-    <div class="ba-wrapper" id="slider3">
-      <img src="images/after-brick.png"  alt="После — кирпич" id="base-img-3" />
-      <div class="ba-after" id="clip-3">
-        <img src="images/before-brick.png" alt="До — кирпич" id="over-img-3" />
-      </div>
-      <div class="ba-label ba-label-before">До</div>
-      <div class="ba-label ba-label-after">После</div>
-      <div class="ba-divider-line" id="line3"></div>
-      <div class="ba-handle" id="handle3">
-        <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-      </div>
-      <button class="ba-fullscreen-btn" data-idx="2" aria-label="На весь экран">
-        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-      </button>
-      <div class="ba-guide hidden" id="guide3">
-        <div class="ba-guide-pill"><span class="arrow">←</span> Потяните <span class="arrow">→</span></div>
-        <div class="ba-guide-hand" id="guide-hand3">↕</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- EXTRA PHOTOS -->
-  <div class="gallery-section">
-    <div class="section-title">
-      <div class="icon"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
-      Дополнительные фото
-    </div>
-    <div class="extra-grid">
-      <div class="gallery-item extra-item" data-src="images/brickSidesCompared.jpg">
-        <img src="images/brickSidesCompared.jpg" alt="Сравнение сторон кирпича" loading="lazy" />
-        <div class="gallery-overlay">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </div>
-        <div class="gallery-caption">Сравнение сторон кирпича</div>
-      </div>
-      <div class="gallery-item extra-item final-item" data-src="images/finallyDonedBrick.jpg">
-        <img src="images/finallyDonedBrick.jpg" alt="Итоговый результат" loading="lazy" />
-        <div class="gallery-overlay">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </div>
-        <div class="gallery-caption final-caption">Итоговый результат — покрашен и готов</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- GALLERY -->
-  <div class="gallery-section">
-    <div class="section-title">
-      <div class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
-      Галерея коллажей
-    </div>
-    <div class="gallery-grid">
-      <div class="gallery-item" data-src="images/collaje-FrontSide.jpg">
-        <img src="images/collaje-FrontSide.jpg" alt="Коллаж — передняя сторона" loading="lazy" />
-        <div class="gallery-overlay">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </div>
-        <div class="gallery-caption">Передняя сторона</div>
-      </div>
-      <div class="gallery-item" data-src="images/collage-BackSide.jpg">
-        <img src="images/collage-BackSide.jpg" alt="Коллаж — задняя сторона" loading="lazy" />
-        <div class="gallery-overlay">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </div>
-        <div class="gallery-caption">Задняя сторона</div>
-      </div>
-      <div class="gallery-item" data-src="images/collage-Brick.jpg">
-        <img src="images/collage-Brick.jpg" alt="Коллаж — кирпич" loading="lazy" />
-        <div class="gallery-overlay">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        </div>
-        <div class="gallery-caption">Кирпич крупным планом</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- INFO CARDS -->
-  <div class="info-grid">
-    <div class="info-card">
-      <div class="ic-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
-      <div class="ic-label">Метод</div>
-      <div class="ic-value">Пескоструй</div>
-    </div>
-    <div class="info-card">
-      <div class="ic-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="9" height="5"/><rect x="13" y="4" width="9" height="5"/><rect x="2" y="11" width="6" height="5"/><rect x="10" y="11" width="12" height="5"/><rect x="2" y="18" width="10" height="4"/><rect x="14" y="18" width="8" height="4"/></svg></div>
-      <div class="ic-label">Материал</div>
-      <div class="ic-value">Кирпичная кладка</div>
-    </div>
-    <div class="info-card">
-      <div class="ic-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="ic-label">Результат</div>
-      <div class="ic-value">Очистка выполнена</div>
-    </div>
-    <div class="info-card">
-      <div class="ic-icon"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
-      <div class="ic-label">Ракурсы</div>
-      <div class="ic-value">Фасад + тыльная</div>
-    </div>
-  </div>
-
-</main>
-
-<!-- ── ADDRESS ── -->
-<section class="address-section">
-  <div class="address-inner">
-    <div class="address-label">Место выполнения работ</div>
-    <div class="address-text">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      ул. Темерницкая, 1 — Ростов-на-Дону
-    </div>
-    <div class="map-tabs">
-      <button class="map-tab active">Карта</button>
-      <a class="map-tab" href="https://yandex.ru/maps/?text=Темерницкая+1%2C+Ворошиловский+район%2C+Ростов-на-Дону&l=stv" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;vertical-align:middle;margin-right:5px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Панорама
-      </a>
-    </div>
-    <div class="address-map">
-      <iframe id="map-frame"
-        src="https://yandex.ru/map-widget/v1/?text=Темерницкая%201%2C%20Ворошиловский%20район%2C%20Ростов-на-Дону&z=16&l=map"
-        width="100%" height="340" frameborder="0" allowfullscreen loading="lazy"
-        title="Место выполнения работ">
-      </iframe>
+    <div class="hero-stat">
+      <div class="hero-stat-num">48ч</div>
+      <div class="hero-stat-label">Выезд</div>
     </div>
   </div>
 </section>
 
-<footer>
-  <div class="footer-copy">&copy; 2026 · Пескоструйные работы · <span style="white-space:nowrap">ск-третьяков.рф</span></div>
-  <div class="footer-contact">
-    <span class="fc-label">Исполнитель:</span>
-    <a href="tel:+79381553467">+7 938 155-34-67</a>
-  </div>
-  <div class="footer-dev">Разработка: <a href="https://tryander.space" target="_blank" rel="noopener">tryander.space</a></div>
-</footer>
-
-<!-- ── LIGHTBOX ── -->
-<div class="lightbox" id="lightbox">
-  <img id="lightbox-img" src="" alt="" />
-  <button class="lightbox-close" id="lightbox-close">
-    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-  </button>
-</div>
-
-<!-- ── FULLSCREEN MODAL ── -->
-<div class="fs-modal" id="fs-modal" role="dialog" aria-modal="true">
-  <div class="fs-topbar">
-    <span class="fs-title-text" id="fs-modal-title"></span>
-    <button class="fs-close-btn" id="fs-close-btn" aria-label="Закрыть">
-      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </div>
-  <div class="fs-content">
-    <div class="ba-wrapper" id="fs-slider">
-      <img id="fs-base-img" alt="" />
-      <div class="ba-after" id="fs-clip">
-        <img id="fs-over-img" alt="" />
-      </div>
-      <div class="ba-label ba-label-before">До</div>
-      <div class="ba-label ba-label-after">После</div>
-      <div class="ba-divider-line" id="fs-line"></div>
-      <div class="ba-handle" id="fs-handle">
-        <svg viewBox="0 0 24 24"><path d="M8 5l-5 7 5 7M16 5l5 7-5 7" stroke="#333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+<!-- ══ SERVICES ══ -->
+<section id="services">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head-bar"></div>
+      <div>
+        <h2>Наши <span>услуги</span></h2>
+        <p>Полный спектр строительных и отделочных работ</p>
       </div>
     </div>
+    <div class="services-grid">
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>Пескоструйная обработка</h3>
+        <p>Очистка кирпича, бетона, металла и камня от загрязнений, ржавчины, высолов и старой краски. До — грязно, после — как новое.</p>
+        <div class="service-price">от 180 руб/м²</div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><polyline points="3 9 12 2 21 9"/><path d="M3 9v11a1 1 0 001 1h4v-6h8v6h4a1 1 0 001-1V9"/><path d="M5 9v5M19 9v5"/><line x1="3" y1="14" x2="21" y2="14"/></svg>
+        </div>
+        <h3>Кровельные работы</h3>
+        <p>Монтаж, ремонт и замена кровли любого типа: профлист, металлочерепица, мягкая кровля, плоские крыши. Гидроизоляция и водостоки.</p>
+        <div class="service-price">от 450 руб/м²</div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <h3>Фасадные работы</h3>
+        <p>Утепление, штукатурка, покраска и облицовка фасадов. Восстановление и реставрация. Современные материалы с долгосрочной гарантией.</p>
+        <div class="service-price">от 320 руб/м²</div>
+      </div>
+
+    </div>
   </div>
-</div>
+</section>
+
+<!-- ══ PORTFOLIO ══ -->
+<section id="portfolio">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head-bar"></div>
+      <div>
+        <h2>Выполненные <span>работы</span></h2>
+        <p>Реальные объекты — реальные результаты</p>
+      </div>
+    </div>
+    <div class="portfolio-grid">
+
+      <!-- Реальный проект -->
+      <a href="projects/sandblasting/index.html" class="portfolio-card">
+        <img
+          src="projects/sandblasting/images/finallyDonedBrick.jpg"
+          alt="Пескоструйная обработка кирпича"
+          class="portfolio-card-thumb"
+        />
+        <div class="portfolio-card-body">
+          <span class="portfolio-card-tag">Пескоструй</span>
+          <div class="portfolio-card-title">Обработка кирпичного фасада</div>
+          <div class="portfolio-card-desc">Полная пескоструйная очистка кирпичной кладки с трёх сторон. Убраны загрязнения, высолы и старые покрытия. Результат — как новый кирпич.</div>
+          <div class="portfolio-card-footer">
+            <span>Смотреть проект</span>
+            <div class="portfolio-card-arrow">
+              <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Заглушки -->
+      <div class="portfolio-card portfolio-card-soon">
+        <div class="portfolio-card-thumb-placeholder">Скоро</div>
+        <div class="portfolio-card-body">
+          <span class="portfolio-card-tag">Фасад</span>
+          <div class="portfolio-card-title">Утепление и штукатурка фасада</div>
+          <div class="portfolio-card-desc">Жилой дом, 480 м². Система утепления, армирование, декоративная штукатурка.</div>
+          <div class="portfolio-card-footer">
+            <span>В работе</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="portfolio-card portfolio-card-soon">
+        <div class="portfolio-card-thumb-placeholder">Скоро</div>
+        <div class="portfolio-card-body">
+          <span class="portfolio-card-tag">Покраска</span>
+          <div class="portfolio-card-title">Покраска промышленного объекта</div>
+          <div class="portfolio-card-desc">Металлоконструкции и стены цеха, антикоррозийное покрытие 1200 м².</div>
+          <div class="portfolio-card-footer">
+            <span>В работе</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CALCULATOR ══ -->
+<section id="calculator">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head-bar"></div>
+      <div>
+        <h2>Примерная <span>стоимость</span></h2>
+        <p>Укажите параметры — получите ориентир по цене</p>
+      </div>
+    </div>
+
+    <div class="calc-wrap">
+
+      <!-- INPUT -->
+      <div class="calc-panel">
+
+        <div class="calc-label"><span class="calc-label-dot"></span>Вид работ</div>
+        <div class="form-group" style="margin-bottom:20px">
+          <select class="calc-select" id="calc-type" onchange="calcUpdate()">
+            <option value="sand">Пескоструйная обработка</option>
+            <option value="roof">Кровельные работы</option>
+            <option value="facade">Фасадные работы</option>
+          </select>
+        </div>
+
+        <div class="calc-label"><span class="calc-label-dot"></span>Площадь</div>
+        <div class="calc-slider-wrap">
+          <div class="calc-slider-row">
+            <span style="font-size:0.72rem;color:var(--text-dim)">Площадь поверхности</span>
+            <span class="calc-slider-val" id="area-val">50 м²</span>
+          </div>
+          <input type="range" id="calc-area" min="5" max="2000" value="50" step="5" oninput="calcUpdate()" />
+          <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-muted);margin-top:4px">
+            <span>5 м²</span><span>2 000 м²</span>
+          </div>
+        </div>
+
+        <div class="calc-divider-inner"></div>
+
+        <div class="calc-label"><span class="calc-label-dot"></span>Сложность объекта</div>
+        <div class="calc-slider-wrap">
+          <div class="calc-slider-row">
+            <span style="font-size:0.72rem;color:var(--text-dim)">Коэффициент сложности</span>
+            <span class="calc-slider-val" id="complexity-val">×1.0</span>
+          </div>
+          <input type="range" id="calc-complexity" min="10" max="20" value="10" step="1" oninput="calcUpdate()" />
+          <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-muted);margin-top:4px">
+            <span>Простой</span><span>Высокий</span>
+          </div>
+        </div>
+
+        <div class="calc-divider-inner"></div>
+
+        <div class="calc-label"><span class="calc-label-dot"></span>Материал поверхности</div>
+        <div class="form-group" style="margin-bottom:0">
+          <select class="calc-select" id="calc-material" onchange="calcUpdate()">
+            <option value="1.0">Кирпич</option>
+            <option value="0.9">Бетон / блоки</option>
+            <option value="1.1">Старая кладка / реставрация</option>
+            <option value="0.8">Металл</option>
+            <option value="1.2">Декоративный / сложный</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- RESULT -->
+      <div class="calc-result-panel">
+        <div>
+          <div class="calc-result-title">— Предварительный расчёт —</div>
+          <div class="calc-price-display">
+            <div class="calc-price-label">Ориентировочная стоимость</div>
+            <div class="calc-price-val" id="calc-total">9 000 ₽</div>
+            <div class="calc-price-note" id="calc-range">от 7 650 ₽ до 10 800 ₽</div>
+          </div>
+          <div class="calc-breakdown" id="calc-breakdown">
+            <div class="calc-breakdown-row">
+              <span>Вид работ</span>
+              <span id="bd-type">Пескоструйная обработка</span>
+            </div>
+            <div class="calc-breakdown-row">
+              <span>Площадь</span>
+              <span id="bd-area">50 м²</span>
+            </div>
+            <div class="calc-breakdown-row">
+              <span>Базовая ставка</span>
+              <span id="bd-rate">180 руб/м²</span>
+            </div>
+            <div class="calc-breakdown-row">
+              <span>Коэффициент сложности</span>
+              <span id="bd-complex">×1.0</span>
+            </div>
+            <div class="calc-breakdown-row">
+              <span>Коэффициент материала</span>
+              <span id="bd-mat">×1.0</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="calc-disclaimer">
+            * Расчёт носит ориентировочный характер. Точная стоимость определяется после выезда специалиста на объект и оценки фактического состояния поверхности. Выезд — бесплатно.
+          </div>
+          <a href="#request" class="btn-primary" style="margin-top:18px;display:block;text-align:center">
+            Получить точный расчёт
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ REQUEST FORM ══ -->
+<section id="request">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head-bar"></div>
+      <div>
+        <h2>Оставить <span>заявку</span></h2>
+        <p>Бесплатный выезд и расчёт стоимости — в течение 48 часов</p>
+      </div>
+    </div>
+
+    <div class="form-wrap">
+
+      <!-- INFO -->
+      <div class="form-info-panel">
+        <div>
+          <h3>Мы свяжемся с вами<br/><span>в течение 2 часов</span></h3>
+          <p style="margin-top:12px">Опишите задачу и укажите контакт — наш специалист перезвонит, ответит на вопросы и договорится об удобном времени выезда.</p>
+        </div>
+
+        <div class="form-perks">
+          <div class="form-perk">
+            <div class="form-perk-dot"></div>
+            <span>Бесплатный выезд и оценка объекта</span>
+          </div>
+          <div class="form-perk">
+            <div class="form-perk-dot"></div>
+            <span>Точный расчёт за 24 часа</span>
+          </div>
+          <div class="form-perk">
+            <div class="form-perk-dot"></div>
+            <span>Защищаем всё вокруг перед стартом</span>
+          </div>
+          <div class="form-perk">
+            <div class="form-perk-dot"></div>
+            <span>Убираем мусор и сдаём в чистоте</span>
+          </div>
+          <div class="form-perk">
+            <div class="form-perk-dot"></div>
+            <span>Договор, гарантия, работаем с юрлицами</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="form-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.72A2 2 0 012 .79h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.53a16 16 0 006.29 6.29l1.1-1.34a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            <a href="tel:+79381553467" style="color:inherit;text-decoration:none;">+7 (938) 155-34-67</a>
+          </div>
+          <div class="form-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="mailto:humichi@mail.ru" style="color:inherit;text-decoration:none;">humichi@mail.ru</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM -->
+      <div class="form-input-panel">
+        <div id="request-form-body">
+          <!-- honeypot: невидимое поле-ловушка для ботов -->
+          <div style="position:absolute;left:-9999px;top:-9999px;opacity:0;height:0;overflow:hidden;" aria-hidden="true">
+            <label for="f-website">Website</label>
+            <input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="f-name">Имя *</label>
+              <input type="text" id="f-name" placeholder="Иван Иванов" maxlength="100" />
+            </div>
+            <div class="form-group">
+              <label for="f-phone">Телефон *</label>
+              <input type="tel" id="f-phone" placeholder="+7 (___) ___-__-__" maxlength="18" autocomplete="tel" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="f-service">Вид работ</label>
+            <select id="f-service">
+              <option value="">— Выберите услугу —</option>
+              <option>Пескоструйная обработка</option>
+              <option>Кровельные работы</option>
+              <option>Фасадные работы</option>
+              <option>Несколько услуг</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-address">Адрес объекта</label>
+            <input type="text" id="f-address" placeholder="Город, улица, дом" maxlength="200" />
+          </div>
+          <div class="form-group">
+            <label for="f-desc">Опишите задачу</label>
+            <textarea id="f-desc" rows="4" placeholder="Площадь, материал поверхности, состояние, сроки…" maxlength="1000"></textarea>
+          </div>
+          <button class="btn-primary form-submit" onclick="submitForm()">
+            Отправить заявку
+          </button>
+          <div style="margin-top:12px;font-size:0.65rem;color:var(--text-muted);line-height:1.6">
+            Нажимая кнопку, вы соглашаетесь на обработку персональных данных в соответствии с политикой конфиденциальности.
+          </div>
+        </div>
+
+        <div class="form-success" id="form-success">
+          <div class="form-success-icon">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h4>Заявка принята!</h4>
+          <p>Мы получили вашу заявку и свяжемся с вами в течение 2 часов. Спасибо!</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ WHY US ══ -->
+<section id="why">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head-bar"></div>
+      <div>
+        <h2>Почему <span>мы</span></h2>
+        <p>Надёжность, подтверждённая результатами</p>
+      </div>
+    </div>
+
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-num">20+</div>
+        <div class="why-title">Лет на рынке</div>
+        <div class="why-desc">Работаем с 2004 года — опыт, которому можно доверять.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-num">120+</div>
+        <div class="why-title">Объектов сдано</div>
+        <div class="why-desc">Жилые дома, промышленные объекты, административные здания.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-num">2 года</div>
+        <div class="why-title">Гарантия</div>
+        <div class="why-desc">Даём письменную гарантию на все выполненные работы.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-num">48ч</div>
+        <div class="why-title">Выезд специалиста</div>
+        <div class="why-desc">Бесплатно выезжаем на объект в течение 48 часов.</div>
+      </div>
+    </div>
+
+    <!-- Блок ответственности -->
+    <div style="margin-top:2px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--yellow);padding:32px 28px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;">
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:0.68rem;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);">Защита объекта</div>
+        <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.7;">Перед началом работ полностью укрываем и защищаем все поверхности, окна, двери и прилегающие зоны — никаких случайных повреждений.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:0.68rem;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);">Убираемся после себя</div>
+        <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.7;">По завершении работ вывозим весь строительный мусор, смываем следы работы и сдаём объект в чистом виде. Вы принимаете результат, а не последствия.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:0.68rem;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);">Безопасность на площадке</div>
+        <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.7;">Ограждаем опасные зоны, работаем в СИЗ, соблюдаем нормы охраны труда. Соседи и жильцы под защитой — работаем без конфликтов.</div>
+      </div>
+
+    </div>
+
+    <style>
+      @media (max-width: 640px) {
+        #why .container > div:last-child {
+          grid-template-columns: 1fr !important;
+        }
+      }
+    </style>
+
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">СК-Третьяков</div>
+        <div class="footer-brand-desc">Пескоструй, кровля, фасад — профессионально и чисто.</div>
+      </div>
+      <div class="footer-links">
+        <a href="#services">Услуги</a>
+        <a href="#portfolio">Работы</a>
+        <a href="#calculator">Стоимость</a>
+        <a href="#request">Заявка</a>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 СК-Третьяков. Все права защищены.</div>
+      <div class="footer-copy">Разработка — <a href="https://tryander.space" target="_blank" style="color:var(--yellow);text-decoration:none;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">tryander.space</a></div>
+    </div>
+    <div class="footer-hazard"></div>
+  </div>
+</footer>
+
+<!-- Scroll to top -->
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
 
 <script>
-/* ════════════════════════════════
-   LIGHTBOX
-   ════════════════════════════════ */
-const lightbox     = document.getElementById('lightbox');
-const lightboxImg  = document.getElementById('lightbox-img');
-const lightboxClose= document.getElementById('lightbox-close');
+  /* ── PHONE MASK ── */
+  const phoneInput = document.getElementById('f-phone');
+  phoneInput.addEventListener('input', function(e) {
+    let digits = this.value.replace(/\D/g, '');
+    // если начинается с 8 — заменяем на 7
+    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+    // если начинается не с 7 — добавляем 7 спереди
+    if (digits.length > 0 && !digits.startsWith('7')) digits = '7' + digits;
+    // обрезаем до 11 цифр
+    digits = digits.slice(0, 11);
 
-document.querySelectorAll('.gallery-item').forEach(item => {
-  item.addEventListener('click', () => {
-    lightboxImg.src = item.dataset.src;
-    lightbox.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    let formatted = '';
+    if (digits.length === 0) { formatted = ''; }
+    else if (digits.length <= 1)  { formatted = '+' + digits; }
+    else if (digits.length <= 4)  { formatted = '+' + digits[0] + ' (' + digits.slice(1); }
+    else if (digits.length <= 7)  { formatted = '+' + digits[0] + ' (' + digits.slice(1,4) + ') ' + digits.slice(4); }
+    else if (digits.length <= 9)  { formatted = '+' + digits[0] + ' (' + digits.slice(1,4) + ') ' + digits.slice(4,7) + '-' + digits.slice(7); }
+    else                           { formatted = '+' + digits[0] + ' (' + digits.slice(1,4) + ') ' + digits.slice(4,7) + '-' + digits.slice(7,9) + '-' + digits.slice(9,11); }
+
+    this.value = formatted;
   });
-});
 
-function closeLightbox() {
-  lightbox.classList.remove('open');
-  document.body.style.overflow = '';
-}
+  phoneInput.addEventListener('keydown', function(e) {
+    // разрешаем: backspace, delete, стрелки, tab
+    if ([8,46,37,38,39,40,9].includes(e.keyCode)) return;
+    // блокируем не-цифры (кроме +)
+    if (!/[\d+]/.test(e.key) && !e.ctrlKey && !e.metaKey) e.preventDefault();
+  });
 
-lightboxClose.addEventListener('click', closeLightbox);
-lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLightbox(); closeFullscreen(); } });
-
-/* ════════════════════════════════
-   SLIDER FACTORY
-   ════════════════════════════════ */
-const sliders = [];
-let userInteracted = false;
-let anyDragging = false;
-
-function makeSlider(wrapperId, clipId, lineId, handleId, overImgId, guideId, guideHandId) {
-  const wrapper  = document.getElementById(wrapperId);
-  const clip     = document.getElementById(clipId);
-  const line     = document.getElementById(lineId);
-  const handle   = document.getElementById(handleId);
-  const overImg  = document.getElementById(overImgId);
-  const guide    = guideId    ? document.getElementById(guideId)    : null;
-  const guideHand= guideHandId? document.getElementById(guideHandId): null;
-
-  let active = false;
-  let pos = 50;
-
-  function setPos(pct) {
-    pct = Math.max(2, Math.min(98, pct));
-    pos = pct;
-    clip.style.width    = pct + '%';
-    line.style.left     = pct + '%';
-    handle.style.left   = pct + '%';
-    overImg.style.width = (100 / (pct / 100)) + '%';
-    if (guideHand) guideHand.style.left = pct + '%';
+  /* ── NAV BURGER ── */
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  burger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+  function closeMobileMenu() {
+    mobileMenu.classList.remove('open');
   }
 
-  function getPct(clientX) {
-    const r = wrapper.getBoundingClientRect();
-    return ((clientX - r.left) / r.width) * 100;
+  /* ── SCROLL TOP ── */
+  const scrollTopBtn = document.getElementById('scroll-top');
+  window.addEventListener('scroll', () => {
+    scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+  });
+
+  /* ── CALCULATOR ── */
+  const rates = {
+    sand:   { label: 'Пескоструйная обработка', rate: 180 },
+    roof:   { label: 'Кровельные работы',        rate: 450 },
+    facade: { label: 'Фасадные работы',          rate: 320 },
+  };
+
+  function fmt(n) {
+    return n.toLocaleString('ru-RU') + ' ₽';
   }
 
-  function onInteract() {
-    if (!userInteracted) {
-      userInteracted = true;
-      sliders.forEach(s => s.guide && s.guide.classList.add('hidden'));
-      stopIdleAnim();
+  function calcUpdate() {
+    const typeKey  = document.getElementById('calc-type').value;
+    const area     = parseInt(document.getElementById('calc-area').value);
+    const complexV = parseInt(document.getElementById('calc-complexity').value);
+    const matV     = parseFloat(document.getElementById('calc-material').value);
+
+    const complexity = complexV / 10; // 1.0–2.0
+    const info = rates[typeKey];
+    const base = info.rate * area * complexity * matV;
+    const lo   = Math.round(base * 0.85);
+    const hi   = Math.round(base * 1.2);
+
+    document.getElementById('area-val').textContent      = area + ' м²';
+    document.getElementById('complexity-val').textContent = '×' + complexity.toFixed(1);
+    document.getElementById('calc-total').textContent    = fmt(Math.round(base));
+    document.getElementById('calc-range').textContent    = 'от ' + fmt(lo) + ' до ' + fmt(hi);
+
+    document.getElementById('bd-type').textContent    = info.label;
+    document.getElementById('bd-area').textContent    = area + ' м²';
+    document.getElementById('bd-rate').textContent    = info.rate + ' руб/м²';
+    document.getElementById('bd-complex').textContent = '×' + complexity.toFixed(1);
+    document.getElementById('bd-mat').textContent     = '×' + matV.toFixed(1);
+  }
+
+  calcUpdate();
+
+  /* ── SECURITY HELPERS ── */
+  // Sanitize: удаляет HTML-теги и обрезает длину
+  function sanitize(str, maxLen) {
+    return String(str).replace(/<[^>]*>/g, '').replace(/[<>"'`]/g, '').trim().slice(0, maxLen || 200);
+  }
+
+  // Rate limit: не чаще 1 раз в 30 сек
+  let lastSubmitTime = 0;
+  // Timestamp: страница загружена (боты отправляют мгновенно)
+  const pageLoadTime = Date.now();
+
+  /* ── FORM SUBMIT ── */
+  async function submitForm() {
+    const btn = document.querySelector('.form-submit');
+
+    // 1) Honeypot: если заполнено скрытое поле — это бот
+    if (document.getElementById('f-website').value) {
+      // притворяемся что всё ок, но ничего не отправляем
+      document.getElementById('request-form-body').style.display = 'none';
+      const succ = document.getElementById('form-success');
+      succ.style.display = 'flex';
+      succ.style.flexDirection = 'column';
+      succ.style.alignItems = 'center';
+      return;
+    }
+
+    // 2) Анти-бот: если форма отправлена раньше 3 сек после загрузки — бот
+    if (Date.now() - pageLoadTime < 3000) {
+      alert('Подождите немного перед отправкой.');
+      return;
+    }
+
+    // 3) Rate limit: не чаще раза в 30 сек
+    if (Date.now() - lastSubmitTime < 30000 && lastSubmitTime > 0) {
+      alert('Заявка уже отправлена. Подождите 30 секунд.');
+      return;
+    }
+
+    // 4) Получаем и санитизируем
+    const name    = sanitize(document.getElementById('f-name').value, 100);
+    const phone   = document.getElementById('f-phone').value.trim();
+    const service = sanitize(document.getElementById('f-service').value, 60);
+    const address = sanitize(document.getElementById('f-address').value, 200);
+    const desc    = sanitize(document.getElementById('f-desc').value, 1000);
+
+    // 5) Валидация
+    if (!name || name.length < 2) {
+      const el = document.getElementById('f-name');
+      el.focus(); el.style.borderColor = 'var(--red)';
+      setTimeout(() => el.style.borderColor = '', 2000);
+      return;
+    }
+    const digits = phone.replace(/\D/g, '');
+    if (!phone || digits.length < 11 || !digits.startsWith('7')) {
+      const el = document.getElementById('f-phone');
+      el.focus(); el.style.borderColor = 'var(--red)';
+      setTimeout(() => el.style.borderColor = '', 2000);
+      return;
+    }
+
+    // 6) Блокируем кнопку
+    btn.disabled = true;
+    btn.textContent = 'Отправляем…';
+    lastSubmitTime = Date.now();
+
+    try {
+      const res = await fetch('https://formspree.io/f/mreyealk', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          Имя: name,
+          Телефон: phone,
+          Услуга: service || '—',
+          Адрес: address || '—',
+          Описание: desc || '—',
+          _subject: 'Новая заявка с сайта СК-Третьяков',
+        })
+      });
+
+      if (res.ok) {
+        document.getElementById('request-form-body').style.display = 'none';
+        const succ = document.getElementById('form-success');
+        succ.style.display = 'flex';
+        succ.style.flexDirection = 'column';
+        succ.style.alignItems = 'center';
+      } else {
+        throw new Error('not ok');
+      }
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = 'Отправить заявку';
+      lastSubmitTime = 0;
+      alert('Ошибка при отправке. Позвоните нам: +7 (938) 155-34-67');
     }
   }
 
-  /* Mouse */
-  wrapper.addEventListener('mousedown', e => {
-    if (e.target.closest('.ba-fullscreen-btn')) return; // ignore fullscreen btn
-    onInteract();
-    active = true;
-    anyDragging = true;
-    setPos(getPct(e.clientX));
-  });
-  window.addEventListener('mousemove', e => { if (active) setPos(getPct(e.clientX)); });
-  window.addEventListener('mouseup',   () => {
-    active = false;
-    // Delay clearing so the click handler (which fires after mouseup) sees the flag
-    setTimeout(() => { anyDragging = false; }, 50);
-  });
+  /* ── SMOOTH NAV HIGHLIGHT ── */
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
 
-  /* Touch — prevent page scroll while dragging */
-  wrapper.addEventListener('touchstart', e => {
-    if (e.target.closest('.ba-fullscreen-btn')) return; // ignore fullscreen btn
-    onInteract();
-    active = true;
-    setPos(getPct(e.touches[0].clientX));
-  }, { passive: true });
-
-  wrapper.addEventListener('touchmove', e => {
-    if (!active) return;
-    e.preventDefault(); // stop page from scrolling
-    setPos(getPct(e.touches[0].clientX));
-  }, { passive: false });
-
-  window.addEventListener('touchend',   () => { active = false; });
-  window.addEventListener('touchcancel',() => { active = false; });
-
-  setPos(50);
-
-  const state = { setPos, guide, guideHand, getPos: () => pos };
-  sliders.push(state);
-  return state;
-}
-
-/* ════════════════════════════════
-   IDLE ANIMATION
-   ════════════════════════════════ */
-let idleRaf   = null;
-let idleStart = null;
-
-function easeInOutSine(t) { return -(Math.cos(Math.PI * t) - 1) / 2; }
-
-function getAnimPos(t) {
-  if (t < 0.25) return 50 - 22 * easeInOutSine(t / 0.25);
-  if (t < 0.5)  return 28 + 22 * easeInOutSine((t - 0.25) / 0.25);
-  if (t < 0.75) return 50 + 22 * easeInOutSine((t - 0.5)  / 0.25);
-  return              72 - 22 * easeInOutSine((t - 0.75) / 0.25);
-}
-
-const CYCLE_MS = 2200;
-
-function idleLoop(ts) {
-  if (userInteracted) return;
-  if (!idleStart) idleStart = ts;
-  const t = ((ts - idleStart) % CYCLE_MS) / CYCLE_MS;
-  if (sliders[0]) sliders[0].setPos(getAnimPos(t));
-  idleRaf = requestAnimationFrame(idleLoop);
-}
-
-function stopIdleAnim() {
-  if (idleRaf) { cancelAnimationFrame(idleRaf); idleRaf = null; }
-}
-
-/* ════════════════════════════════
-   FULLSCREEN MODAL
-   ════════════════════════════════ */
-const fsModal    = document.getElementById('fs-modal');
-const fsTitle    = document.getElementById('fs-modal-title');
-const fsCloseBtn = document.getElementById('fs-close-btn');
-const fsBaseImg  = document.getElementById('fs-base-img');
-const fsOverImg  = document.getElementById('fs-over-img');
-let fsSliderState = null;
-
-const sliderMeta = [
-  {
-    title: 'Передняя сторона',
-    baseImg: 'images/after-FrontSide.png',
-    overImg: 'images/before-FrontSide.png'
-  },
-  {
-    title: 'Задняя сторона',
-    baseImg: 'images/after-BackSide.png',
-    overImg: 'images/before-backSide.png'
-  },
-  {
-    title: 'Кирпич крупным планом',
-    baseImg: 'images/after-brick.png',
-    overImg: 'images/before-brick.png'
+  function onScroll() {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 80) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--yellow)' : '';
+    });
   }
-];
-
-function openFullscreen(idx) {
-  const meta = sliderMeta[idx];
-  fsTitle.textContent = meta.title;
-  fsBaseImg.src = meta.baseImg;
-  fsOverImg.src = meta.overImg;
-
-  // re-init the modal slider fresh
-  if (fsSliderState) {
-    // remove from sliders array to avoid conflicts
-    const i = sliders.indexOf(fsSliderState);
-    if (i > -1) sliders.splice(i, 1);
-  }
-  fsSliderState = makeSlider('fs-slider','fs-clip','fs-line','fs-handle','fs-over-img', null, null);
-  // wait for image to paint then set 50%
-  requestAnimationFrame(() => fsSliderState.setPos(50));
-
-  fsModal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeFullscreen() {
-  fsModal.classList.remove('open');
-  document.body.style.overflow = '';
-  // reset main sliders to centre
-  sliders.forEach(s => { if (s !== fsSliderState) s.setPos(50); });
-}
-
-fsCloseBtn.addEventListener('click', closeFullscreen);
-
-// Close on backdrop click (anywhere outside the slider and topbar)
-fsModal.addEventListener('click', e => {
-  if (anyDragging) return; // ignore click after drag
-  if (!e.target.closest('#fs-slider') && !e.target.closest('.fs-topbar')) closeFullscreen();
-});
-
-// Wire up fullscreen buttons
-document.querySelectorAll('.ba-fullscreen-btn').forEach(btn => {
-  btn.addEventListener('click', e => {
-    e.stopPropagation();
-    openFullscreen(+btn.dataset.idx);
-  });
-});
-
-/* ════════════════════════════════
-   INIT
-   ════════════════════════════════ */
-window.addEventListener('load', () => {
-  makeSlider('slider1','clip-1','line1','handle1','over-img-1','guide1','guide-hand1');
-  makeSlider('slider2','clip-2','line2','handle2','over-img-2','guide2','guide-hand2');
-  makeSlider('slider3','clip-3','line3','handle3','over-img-3','guide3','guide-hand3');
-
-  setTimeout(() => {
-    if (!userInteracted) {
-      sliders[0].guide.classList.remove('hidden');
-      sliders[0].guideHand.style.left = '50%';
-      idleStart = null;
-      idleRaf = requestAnimationFrame(idleLoop);
-    }
-  }, 2500);
-});
+  window.addEventListener('scroll', onScroll);
 </script>
+
 </body>
 </html>
