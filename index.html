@@ -935,19 +935,19 @@
     ══════════════════════════════════ */
     @media (max-width: 640px) {
 
-      /* Секции — меньше отступы */
+      /* Секции */
       section { padding: 48px 16px; }
 
       /* Hero */
       .hero { padding: 90px 16px 48px; min-height: auto; }
       .hero-btns { flex-direction: column; width: 100%; }
-      .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+      .btn-primary, .btn-secondary { width: 100%; text-align: center; padding: 16px 24px; }
       .hero-stats {
         display: grid;
         grid-template-columns: 1fr 1fr;
         width: 100%;
       }
-      .hero-stat { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+      .hero-stat { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 14px 10px; }
       .hero-stat:nth-child(2) { border-right: none; }
       .hero-stat:nth-child(3) { border-bottom: none; }
       .hero-stat:nth-child(4) { border-right: none; border-bottom: none; }
@@ -959,27 +959,36 @@
 
       /* Портфолио */
       .portfolio-grid { grid-template-columns: 1fr; }
+      .portfolio-card-thumb { height: 220px; }
 
       /* Калькулятор */
       .calc-wrap { grid-template-columns: 1fr; }
       .calc-panel { padding: 22px 18px; }
       .calc-result-panel { padding: 22px 18px; }
 
-      /* Форма заявки */
+      /* Слайдер — крупнее для пальцев */
+      input[type="range"] { height: 6px; }
+      input[type="range"]::-webkit-slider-thumb { width: 26px; height: 26px; }
+
+      /* Форма — поля крупнее, не зумятся на iOS */
       .form-wrap { grid-template-columns: 1fr; }
       .form-info-panel { padding: 24px 18px; gap: 20px; }
       .form-info-panel h3 { font-size: 0.95rem; }
       .form-input-panel { padding: 24px 18px; }
       .form-row-2 { grid-template-columns: 1fr; gap: 0; }
-
-      /* Почему мы — блок ответственности */
-      .why-resp-block {
-        grid-template-columns: 1fr !important;
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        font-size: 16px; /* предотвращает zoom на iOS */
+        padding: 13px 14px;
+        min-height: 48px; /* крупные touch-таргеты */
       }
-      .why-grid { grid-template-columns: 1fr 1fr; }
+      .form-group label { font-size: 0.72rem; margin-bottom: 8px; }
 
-      /* Блок ответственности */
-      .why-resp-block { padding: 22px 18px !important; gap: 18px !important; }
+      /* Почему мы */
+      .why-resp-block { grid-template-columns: 1fr !important; padding: 22px 18px !important; gap: 18px !important; }
+      .why-grid { grid-template-columns: 1fr 1fr; }
+      .why-num { font-size: 1.8rem; }
 
       /* Футер */
       .footer-top { flex-direction: column; gap: 16px; }
@@ -988,6 +997,9 @@
 
       /* Секция head */
       .section-head { margin-bottom: 24px; }
+
+      /* Scroll-top — выше чтобы не перекрывать кнопку звонка */
+      #scroll-top { bottom: 84px; right: 16px; }
     }
 
     /* ══════════════════════════════════
@@ -1142,16 +1154,31 @@
     .mobile-menu a {
       color: var(--text-dim);
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       letter-spacing: 2px;
       text-transform: uppercase;
       font-weight: 600;
-      padding: 8px 0;
+      padding: 14px 0;
       border-bottom: 1px solid var(--border);
       transition: color 0.2s;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
     }
     .mobile-menu a:hover { color: var(--yellow); }
     .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu-phone {
+      margin-top: 8px;
+      padding: 14px 0 0;
+      border-top: 1px solid var(--border);
+      color: var(--yellow) !important;
+      font-size: 1rem !important;
+      letter-spacing: 1px !important;
+      display: flex !important;
+      align-items: center;
+      gap: 10px;
+    }
+    .mobile-menu-phone svg { stroke: var(--yellow); flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -1182,7 +1209,11 @@
   <a href="#portfolio" onclick="closeMobileMenu()">Работы</a>
   <a href="#calculator" onclick="closeMobileMenu()">Стоимость</a>
   <a href="#why" onclick="closeMobileMenu()">О нас</a>
-  <a href="#request" onclick="closeMobileMenu()">Оставить заявку →</a>
+  <a href="#request" onclick="closeMobileMenu()" style="color:var(--yellow)">Оставить заявку →</a>
+  <a href="tel:+79381553467" class="mobile-menu-phone" onclick="closeMobileMenu()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.72A2 2 0 012 .79h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.53a16 16 0 006.29 6.29l1.1-1.34a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+    +7 (938) 155-34-67
+  </a>
 </div>
 
 <!-- ══ HERO ══ -->
@@ -1192,7 +1223,12 @@
   <p class="hero-sub">Пескоструйная обработка, кровельные и фасадные работы — профессионально и в срок.</p>
   <div class="hero-btns">
     <a href="#request" class="btn-primary">Оставить заявку</a>
-    <a href="#portfolio" class="btn-secondary">Наши работы</a>
+    <a href="tel:+79381553467" class="btn-secondary">
+      <span style="display:inline-flex;align-items:center;gap:8px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.72A2 2 0 012 .79h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.53a16 16 0 006.29 6.29l1.1-1.34a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        Позвонить
+      </span>
+    </a>
   </div>
   <div class="hero-stats">
     <div class="hero-stat">
