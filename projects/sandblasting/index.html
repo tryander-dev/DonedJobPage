@@ -725,30 +725,47 @@
 </head>
 <body>
 
-<a href="../../index.html" style="
-  position: fixed;
-  top: 16px; left: 16px;
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(10,10,10,0.88);
-  backdrop-filter: blur(10px);
-  border: 1px solid #2a2a2a;
-  border-left: 3px solid #f0b800;
-  color: #e0e0e0;
-  text-decoration: none;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 9px 16px;
-  transition: border-color 0.2s, color 0.2s;
-" onmouseover="this.style.color='#f0b800'" onmouseout="this.style.color='#e0e0e0'">
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f0b800" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-  На главную
-</a>
+<style>
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(10,10,10,0.88);
+    backdrop-filter: blur(10px);
+    border: 1px solid #2a2a2a;
+    border-left: 3px solid #f0b800;
+    color: #e0e0e0;
+    text-decoration: none;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 9px 16px;
+    transition: color 0.2s;
+    position: relative;
+    z-index: 10;
+  }
+  .back-btn:hover { color: #f0b800; }
+  .back-btn svg { flex-shrink: 0; }
+
+  /* Обёртка — сидит над шапкой */
+  .back-bar {
+    position: relative;
+    z-index: 10;
+    background: #0a0a0a;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+  }
+</style>
+
+<div class="back-bar">
+  <a href="../../index.html" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f0b800" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    На главную
+  </a>
+</div>
 
 <header>
   <div class="header-inner">

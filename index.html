@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <!-- Security headers (meta) -->
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -858,6 +858,8 @@
       background: #0a0a0a;
       border-top: 1px solid var(--border);
       padding: 40px 20px 28px;
+      /* Telegram / iOS safe area */
+      padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
     }
     .footer-inner {
       max-width: 1100px;
@@ -1088,7 +1090,7 @@
     #mobile-call {
       display: none;
       position: fixed;
-      bottom: 20px; left: 50%;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px)); left: 50%;
       transform: translateX(-50%);
       z-index: 98;
       background: var(--yellow);
