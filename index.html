@@ -1003,6 +1003,20 @@
     }
 
     /* ══════════════════════════════════
+       SCROLL PROGRESS BAR
+    ══════════════════════════════════ */
+    #scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      width: 0%;
+      height: 3px;
+      background: var(--yellow);
+      z-index: 200;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 8px rgba(240,184,0,0.6);
+    }
+
+    /* ══════════════════════════════════
        SCROLL ANIMATIONS
     ══════════════════════════════════ */
     .fade-up {
@@ -1183,6 +1197,8 @@
 </head>
 <body>
 
+<div id="scroll-progress"></div>
+
 <!-- ══ NAV ══ -->
 <nav>
   <div class="nav-inner">
@@ -1232,19 +1248,19 @@
   </div>
   <div class="hero-stats">
     <div class="hero-stat">
-      <div class="hero-stat-num">20+</div>
+      <div class="hero-stat-num" data-count="20" data-suffix="+">0+</div>
       <div class="hero-stat-label">Лет опыта</div>
     </div>
     <div class="hero-stat">
-      <div class="hero-stat-num">120+</div>
+      <div class="hero-stat-num" data-count="120" data-suffix="+">0+</div>
       <div class="hero-stat-label">Объектов</div>
     </div>
     <div class="hero-stat">
-      <div class="hero-stat-num">100%</div>
+      <div class="hero-stat-num" data-count="100" data-suffix="%">0%</div>
       <div class="hero-stat-label">Гарантия</div>
     </div>
     <div class="hero-stat">
-      <div class="hero-stat-num">48ч</div>
+      <div class="hero-stat-num" data-count="48" data-suffix="ч">0ч</div>
       <div class="hero-stat-label">Выезд</div>
     </div>
   </div>
@@ -1455,8 +1471,8 @@
           <div class="calc-disclaimer">
             * Расчёт носит ориентировочный характер. Точная стоимость определяется после выезда специалиста на объект и оценки фактического состояния поверхности. Выезд — бесплатно.
           </div>
-          <a href="#request" class="btn-primary" style="margin-top:18px;display:block;text-align:center">
-            Получить точный расчёт
+          <a href="#request" class="btn-primary" style="margin-top:18px;display:block;text-align:center" onclick="prefillFormFromCalc()">
+            Получить точный расчёт →
           </a>
         </div>
       </div>
@@ -1896,6 +1912,61 @@
     const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
     mobileCall.classList.toggle('show', window.scrollY > heroBottom - 100);
   });
+
+  /* ── SCROLL PROGRESS BAR ── */
+  const progressBar = document.getElementById('scroll-progress');
+  window.addEventListener('scroll', () => {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (window.scrollY / total * 100) + '%';
+  }, { passive: true });
+
+  /* ── COUNTUP ANIMATION ── */
+  const countEls = document.querySelectorAll('[data-count]');
+  const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (!el.isIntersecting) return;
+      const target = parseInt(el.target.dataset.count);
+      const suffix = el.target.dataset.suffix || '';
+      const duration = 1200;
+      const steps = 40;
+      const step = target / steps;
+      let current = 0;
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.target.textContent = Math.round(current) + suffix;
+        if (current >= target) clearInterval(timer);
+      }, duration / steps);
+      countObserver.unobserve(el.target);
+    });
+  }, { threshold: 0.5 });
+  countEls.forEach(el => countObserver.observe(el));
+
+  /* ── PREFILL FORM FROM CALCULATOR ── */
+  function prefillFormFromCalc() {
+    const typeKey = document.getElementById('calc-type').value;
+    const area    = document.getElementById('calc-area').value;
+    const labels  = {
+      sand:   'Пескоструйная обработка',
+      roof:   'Кровельные работы',
+      facade: 'Фасадные работы',
+    };
+    // ставим услугу в форме
+    const sel = document.getElementById('f-service');
+    for (let i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].text === labels[typeKey]) {
+        sel.selectedIndex = i;
+        break;
+      }
+    }
+    // вставляем площадь в описание если пустое
+    const desc = document.getElementById('f-desc');
+    if (!desc.value.trim()) {
+      desc.value = 'Площадь: ' + area + ' м²';
+    }
+    // фокус на имя
+    setTimeout(() => document.getElementById('f-name').focus(), 400);
+    showToast('Данные из калькулятора перенесены!');
+  }
 
   /* ── SMOOTH NAV HIGHLIGHT ── */
   const sections = document.querySelectorAll('section[id]');
