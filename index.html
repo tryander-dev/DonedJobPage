@@ -932,6 +932,72 @@
     }
 
     /* ══════════════════════════════════
+       MOBILE ADAPTIVE
+    ══════════════════════════════════ */
+    @media (max-width: 640px) {
+
+      /* Секции — меньше отступы */
+      section { padding: 48px 16px; }
+
+      /* Hero */
+      .hero { padding: 90px 16px 48px; min-height: auto; }
+      .hero-btns { flex-direction: column; width: 100%; }
+      .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+      .hero-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+      }
+      .hero-stat { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+      .hero-stat:nth-child(2) { border-right: none; }
+      .hero-stat:nth-child(3) { border-bottom: none; }
+      .hero-stat:nth-child(4) { border-right: none; border-bottom: none; }
+      .hero-stat-num { font-size: 1.3rem; }
+
+      /* Услуги */
+      .services-grid { grid-template-columns: 1fr; }
+      .service-card { padding: 22px 18px; }
+
+      /* Портфолио */
+      .portfolio-grid { grid-template-columns: 1fr; }
+
+      /* Калькулятор */
+      .calc-wrap { grid-template-columns: 1fr; }
+      .calc-panel { padding: 22px 18px; }
+      .calc-result-panel { padding: 22px 18px; }
+
+      /* Форма заявки */
+      .form-wrap { grid-template-columns: 1fr; }
+      .form-info-panel { padding: 24px 18px; gap: 20px; }
+      .form-info-panel h3 { font-size: 0.95rem; }
+      .form-input-panel { padding: 24px 18px; }
+      .form-row-2 { grid-template-columns: 1fr; gap: 0; }
+
+      /* Почему мы — блок ответственности */
+      .why-resp-block {
+        grid-template-columns: 1fr !important;
+      }
+      .why-grid { grid-template-columns: 1fr 1fr; }
+
+      /* Блок ответственности */
+      .why-resp-block { padding: 22px 18px !important; gap: 18px !important; }
+
+      /* Футер */
+      .footer-top { flex-direction: column; gap: 16px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .footer-links { gap: 14px; }
+
+      /* Секция head */
+      .section-head { margin-bottom: 24px; }
+    }
+
+    @media (max-width: 380px) {
+      .why-grid { grid-template-columns: 1fr; }
+      .hero-stat-num { font-size: 1.1rem; }
+      .hero-stat-label { font-size: 0.58rem; letter-spacing: 1px; }
+    }
+
+    /* ══════════════════════════════════
        SCROLL TO TOP
     ══════════════════════════════════ */
     #scroll-top {
@@ -1413,7 +1479,7 @@
     </div>
 
     <!-- Блок ответственности -->
-    <div style="margin-top:2px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--yellow);padding:32px 28px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;">
+    <div class="why-resp-block" style="margin-top:2px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--yellow);padding:32px 28px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;">
 
       <div style="display:flex;flex-direction:column;gap:10px;">
         <div style="font-size:0.68rem;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);">Защита объекта</div>
@@ -1432,13 +1498,6 @@
 
     </div>
 
-    <style>
-      @media (max-width: 640px) {
-        #why .container > div:last-child {
-          grid-template-columns: 1fr !important;
-        }
-      }
-    </style>
 
   </div>
 </section>
