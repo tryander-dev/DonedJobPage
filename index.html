@@ -10,12 +10,12 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
-    script-src 'self' 'unsafe-inline';
+    script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://cdn.jsdelivr.net;
     style-src 'self' 'unsafe-inline';
-    img-src 'self' data:;
+    img-src 'self' data: https://mc.yandex.ru;
     font-src 'self';
-    connect-src 'self' https://formspree.io;
-    frame-src 'none';
+    connect-src 'self' https://formspree.io https://mc.yandex.ru;
+    frame-src https://mc.yandex.ru;
     frame-ancestors 'none';
     form-action 'self' https://formspree.io;
     base-uri 'self';
@@ -23,8 +23,69 @@
   " />
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
 
+  <!-- SEO -->
+  <meta name="description" content="СК-Третьяков — пескоструйная обработка, кровельные и фасадные работы в Ростове-на-Дону и Ростовской области. 20+ лет опыта, 120+ объектов, гарантия. Бесплатный выезд за 48 часов." />
+  <meta name="keywords" content="пескоструй Ростов, кровля Ростов, фасадные работы Ростов, СК Третьяков, строительная компания Ростов-на-Дону, ремонт кровли, утепление фасада, пескоструйная обработка кирпича" />
+  <meta name="geo.region" content="RU-ROS" />
+  <meta name="geo.placename" content="Ростов-на-Дону" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="СК-Третьяков — Пескоструй, Кровля, Фасад в Ростове" />
+  <meta property="og:description" content="Профессиональная пескоструйная обработка, кровельные и фасадные работы в Ростове-на-Дону и области. 20+ лет опыта. Бесплатный выезд и расчёт." />
+  <meta property="og:url" content="https://xn----dtbiscylflc4iob.xn--p1ai/" />
+  <meta property="og:locale" content="ru_RU" />
+  <meta property="og:site_name" content="СК-Третьяков" />
+
+  <!-- Schema.org LocalBusiness -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "СК-Третьяков",
+    "description": "Пескоструйная обработка, кровельные и фасадные работы в Ростове-на-Дону и Ростовской области",
+    "url": "https://xn----dtbiscylflc4iob.xn--p1ai/",
+    "telephone": "+79381553467",
+    "email": "humichi@mail.ru",
+    "areaServed": {
+      "@type": "State",
+      "name": "Ростовская область"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Ростов-на-Дону",
+      "addressRegion": "Ростовская область",
+      "addressCountry": "RU"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 47.2357,
+      "longitude": 39.7015
+    },
+    "openingHours": "Mo-Sa 08:00-18:00",
+    "priceRange": "от 180 руб/м²",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "3"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Строительные услуги",
+      "itemListElement": [
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Пескоструйная обработка" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Кровельные работы" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Фасадные работы" } }
+      ]
+    }
+  }
+  </script>
+
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0a0a'/%3E%3Crect width='32' height='3' fill='%23f0b800'/%3E%3Crect y='29' width='32' height='3' fill='%23f0b800'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%23f0b800' font-family='Arial Black,Arial' font-weight='900' font-size='13'%3EСК%3C/text%3E%3C/svg%3E" />
-  <title>СК-Третьяков — Пескоструй, Кровля, Фасад</title>
+  <title>СК-Третьяков — Пескоструй, Кровля, Фасад | Ростов-на-Дону</title>
+
+  <!-- Yandex.Metrika: вставьте свой код счётчика ниже -->
+  <!-- <script type="text/javascript"> ... </script> -->
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -500,6 +561,214 @@
       border-left-style: solid;
       opacity: 0.5;
       pointer-events: none;
+    }
+
+    /* ══════════════════════════════════
+       HOW WE WORK / PROCESS
+    ══════════════════════════════════ */
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    @media (max-width: 720px) {
+      .process-grid { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 721px) and (max-width: 960px) {
+      .process-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .process-step {
+      background: var(--bg3);
+      padding: 28px 24px;
+      position: relative;
+    }
+    .process-num {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--yellow);
+      opacity: 0.3;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .process-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .process-desc {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ══════════════════════════════════
+       REVIEWS
+    ══════════════════════════════════ */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 720px) {
+      .reviews-grid { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 721px) and (max-width: 960px) {
+      .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .review-card {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-left: 3px solid var(--yellow);
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .review-stars {
+      display: flex;
+      gap: 3px;
+    }
+    .review-stars svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--yellow);
+    }
+    .review-text {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      flex: 1;
+    }
+    .review-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .review-author-avatar {
+      width: 36px;
+      height: 36px;
+      background: var(--yellow-dim);
+      border: 1px solid var(--yellow-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 0.85rem;
+      color: var(--yellow);
+      clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+      flex-shrink: 0;
+    }
+    .review-author-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .review-author-info {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+
+    /* ══════════════════════════════════
+       FAQ
+    ══════════════════════════════════ */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      border: 1px solid var(--border);
+    }
+    .faq-item {
+      background: var(--bg3);
+    }
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      text-align: left;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    .faq-question:hover { color: var(--yellow); }
+    .faq-chevron {
+      width: 18px;
+      height: 18px;
+      stroke: var(--text-dim);
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+      transition: transform 0.3s, stroke 0.2s;
+    }
+    .faq-item.open .faq-chevron {
+      transform: rotate(180deg);
+      stroke: var(--yellow);
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+    }
+    .faq-answer p {
+      padding: 0 22px 18px;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    /* ══════════════════════════════════
+       WHATSAPP FLOAT
+    ══════════════════════════════════ */
+    #whatsapp-float {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      z-index: 90;
+      width: 54px;
+      height: 54px;
+      background: #25d366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+    }
+    #whatsapp-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 28px rgba(37, 211, 102, 0.5);
+    }
+    #whatsapp-float svg {
+      width: 28px;
+      height: 28px;
+      fill: #fff;
+      stroke: none;
+    }
+    @media (max-width: 640px) {
+      #whatsapp-float { bottom: 80px; right: 14px; width: 48px; height: 48px; }
+      #whatsapp-float svg { width: 24px; height: 24px; }
     }
 
     /* ══════════════════════════════════
@@ -1238,7 +1507,7 @@
 <section class="hero" id="home">
   <div class="hero-badge">Строительная Компания</div>
   <h1>СК&thinsp;<span>Третьяков</span></h1>
-  <p class="hero-sub">Пескоструйная обработка, кровельные и фасадные работы — профессионально и в срок.</p>
+  <p class="hero-sub">Пескоструйная обработка, кровельные и фасадные работы в Ростове-на-Дону и Ростовской области — профессионально и в срок.</p>
   <div class="hero-btns">
     <a href="#request" class="btn-primary">Оставить заявку</a>
     <a href="tel:+79381553467" class="btn-secondary">
@@ -1311,6 +1580,51 @@
   </div>
 </section>
 
+<!-- ══ HOW WE WORK ══ -->
+<section id="process" style="background:var(--bg2);">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head-bar"></div>
+      <div>
+        <h2>Как мы <span>работаем</span></h2>
+        <p>6 простых шагов от заявки до результата</p>
+      </div>
+    </div>
+    <div class="process-grid">
+      <div class="process-step fade-up">
+        <div class="process-num">01</div>
+        <div class="process-title">Заявка</div>
+        <div class="process-desc">Вы оставляете заявку на сайте или звоните. Мы уточняем детали и назначаем выезд.</div>
+      </div>
+      <div class="process-step fade-up fade-up-delay-1">
+        <div class="process-num">02</div>
+        <div class="process-title">Выезд на объект</div>
+        <div class="process-desc">Специалист бесплатно приезжает, осматривает объект и делает замеры. В течение 48 часов.</div>
+      </div>
+      <div class="process-step fade-up fade-up-delay-2">
+        <div class="process-num">03</div>
+        <div class="process-title">Расчёт и договор</div>
+        <div class="process-desc">Составляем точную смету, согласовываем сроки и подписываем договор. Всё прозрачно.</div>
+      </div>
+      <div class="process-step fade-up">
+        <div class="process-num">04</div>
+        <div class="process-title">Подготовка</div>
+        <div class="process-desc">Укрываем и защищаем все поверхности вокруг. Завозим оборудование и материалы.</div>
+      </div>
+      <div class="process-step fade-up fade-up-delay-1">
+        <div class="process-num">05</div>
+        <div class="process-title">Выполнение работ</div>
+        <div class="process-desc">Работаем быстро и аккуратно. Контролируем качество на каждом этапе.</div>
+      </div>
+      <div class="process-step fade-up fade-up-delay-2">
+        <div class="process-num">06</div>
+        <div class="process-title">Сдача и гарантия</div>
+        <div class="process-desc">Убираем за собой, сдаём объект в чистоте. Даём гарантию до 2 лет.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ══ PORTFOLIO ══ -->
 <section id="portfolio">
   <div class="container">
@@ -1343,27 +1657,82 @@
         </div>
       </a>
 
-      <!-- Заглушки -->
-      <div class="portfolio-card portfolio-card-soon">
-        <div class="portfolio-card-thumb-placeholder">Скоро</div>
-        <div class="portfolio-card-body">
-          <span class="portfolio-card-tag">Фасад</span>
-          <div class="portfolio-card-title">Утепление и штукатурка фасада</div>
-          <div class="portfolio-card-desc">Жилой дом, 480 м². Система утепления, армирование, декоративная штукатурка.</div>
-          <div class="portfolio-card-footer">
-            <span>В работе</span>
+      <!-- CTA: больше работ -->
+      <div class="portfolio-card portfolio-card-cta" style="display:flex;align-items:center;justify-content:center;min-height:280px;border-style:dashed;text-align:center;">
+        <div style="padding:30px 20px;">
+          <div style="font-size:2.5rem;color:var(--yellow);margin-bottom:12px;">120+</div>
+          <div style="font-size:0.9rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Объектов выполнено</div>
+          <div style="font-size:0.78rem;color:var(--text-dim);line-height:1.6;margin-bottom:18px;">Фото новых проектов добавляем по мере завершения работ</div>
+          <a href="#request" class="btn-primary" style="font-size:0.72rem;padding:10px 24px;">Обсудить ваш проект →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ REVIEWS ══ -->
+<section id="reviews" style="background:var(--bg);">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head-bar"></div>
+      <div>
+        <h2>Отзывы <span>клиентов</span></h2>
+        <p>Что говорят те, кто уже работал с нами</p>
+      </div>
+    </div>
+    <div class="reviews-grid">
+
+      <div class="review-card fade-up">
+        <div class="review-stars">
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+        </div>
+        <div class="review-text">Заказывали пескоструйную обработку кирпичного фасада частного дома. Ребята приехали вовремя, всё укрыли плёнкой, отработали за два дня. Кирпич стал как новый. Рекомендую!</div>
+        <div class="review-author">
+          <div class="review-author-avatar">А</div>
+          <div>
+            <div class="review-author-name">Алексей К.</div>
+            <div class="review-author-info">Частный дом, Ростов-на-Дону</div>
           </div>
         </div>
       </div>
 
-      <div class="portfolio-card portfolio-card-soon">
-        <div class="portfolio-card-thumb-placeholder">Скоро</div>
-        <div class="portfolio-card-body">
-          <span class="portfolio-card-tag">Покраска</span>
-          <div class="portfolio-card-title">Покраска промышленного объекта</div>
-          <div class="portfolio-card-desc">Металлоконструкции и стены цеха, антикоррозийное покрытие 1200 м².</div>
-          <div class="portfolio-card-footer">
-            <span>В работе</span>
+      <div class="review-card fade-up fade-up-delay-1">
+        <div class="review-stars">
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+        </div>
+        <div class="review-text">Делали кровлю на складском помещении. Площадь большая — 600 м². Всё сделали качественно и в оговорённые сроки. Договор, гарантия, никаких сюрпризов по цене. Буду обращаться ещё.</div>
+        <div class="review-author">
+          <div class="review-author-avatar">М</div>
+          <div>
+            <div class="review-author-name">Михаил Д.</div>
+            <div class="review-author-info">Складское помещение, Батайск</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card fade-up fade-up-delay-2">
+        <div class="review-stars">
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7.2 19.5,7.6 14.2,12 15.8,18.8 10,15.4 4.2,18.8 5.8,12 0.5,7.6 7.4,7.2"/></svg>
+        </div>
+        <div class="review-text">Обратились по рекомендации для утепления и покраски фасада многоквартирного дома. Работали аккуратно, соседи не жаловались. Фасад выглядит отлично, зимой стало заметно теплее.</div>
+        <div class="review-author">
+          <div class="review-author-avatar">Е</div>
+          <div>
+            <div class="review-author-name">Елена В.</div>
+            <div class="review-author-info">Многоквартирный дом, Аксай</div>
           </div>
         </div>
       </div>
@@ -1535,6 +1904,14 @@
             <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             <a href="mailto:humichi@mail.ru" style="color:inherit;text-decoration:none;">humichi@mail.ru</a>
           </div>
+          <div class="form-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
+            <a href="https://wa.me/79381553467" target="_blank" style="color:inherit;text-decoration:none;">WhatsApp</a>
+          </div>
+          <div class="form-contact-row">
+            <svg viewBox="0 0 24 24"><path d="M21.198 2.433a2.242 2.242 0 00-1.022.215l-8.609 3.33c-2.068.8-4.133 1.598-5.724 2.21a405.15 405.15 0 01-2.849 1.09c-.42.147-.99.332-1.473.901-.728.855-.2 1.751.25 2.148.328.288.762.472 1.077.59l4.325 1.545c.157.544.7 2.426 1.013 3.472.192.644.37 1.235.475 1.55.167.503.564 1.334 1.377 1.474.678.121 1.227-.26 1.462-.451l2.382-1.971 4.47 3.342.11.074c.463.273 1.2.574 2.006.31 1.24-.397 1.511-1.663 1.511-1.663s3.397-13.597 3.527-14.593c.039-.29.053-.454.053-.6a1.621 1.621 0 00-.147-.68c-.263-.536-.86-.766-1.144-.855z"/></svg>
+            <a href="https://t.me/+79381553467" target="_blank" style="color:inherit;text-decoration:none;">Telegram</a>
+          </div>
         </div>
       </div>
 
@@ -1581,7 +1958,7 @@
             Отправить заявку
           </button>
           <div style="margin-top:12px;font-size:0.65rem;color:var(--text-muted);line-height:1.6">
-            Нажимая кнопку, вы соглашаетесь на обработку персональных данных в соответствии с политикой конфиденциальности.
+            Нажимая кнопку, вы соглашаетесь на обработку персональных данных в соответствии с <a href="privacy.html" target="_blank" style="color:var(--yellow);text-decoration:underline;">политикой конфиденциальности</a>.
           </div>
         </div>
 
@@ -1656,6 +2033,82 @@
   </div>
 </section>
 
+<!-- ══ FAQ ══ -->
+<section id="faq" style="background:var(--bg2);">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head-bar"></div>
+      <div>
+        <h2>Частые <span>вопросы</span></h2>
+        <p>Ответы на то, что спрашивают чаще всего</p>
+      </div>
+    </div>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>Сколько времени занимает пескоструйная обработка?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          <p>Зависит от площади и состояния поверхности. В среднем: 50–100 м² за рабочий день. Небольшой частный дом (3 стены) — 2–3 дня. Точные сроки называем после осмотра объекта.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>Какой абразив вы используете?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          <p>Подбираем абразив под задачу: купершлак для грубой очистки металла и кирпича, мелкая фракция для деликатных поверхностей. Не используем речной песок — он опасен для здоровья и менее эффективен.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>Работаете ли вы зимой?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          <p>Да, пескоструйные работы выполняем круглый год. Кровельные и фасадные работы — в зависимости от температуры и осадков. Подробнее расскажем при обсуждении вашего объекта.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>Работаете с юридическими лицами?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          <p>Да, работаем и с частными лицами, и с организациями. Заключаем договор, предоставляем акты выполненных работ, закрывающие документы для бухгалтерии.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>Выезд на объект действительно бесплатный?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          <p>Да, выезд и оценка бесплатны по Ростову-на-Дону и ближайшим городам (Батайск, Аксай, Новочеркасск). Для удалённых объектов по Ростовской области — обсуждаем индивидуально.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>Не повредит ли пескоструй кирпичную кладку?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">
+          <p>При правильном подборе абразива и давления — нет. Мы регулируем параметры под каждый тип поверхности. Перед началом делаем тестовый участок, чтобы вы видели результат.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- ══ FOOTER ══ -->
 <footer>
   <div class="footer-inner">
@@ -1687,6 +2140,11 @@
 <a id="mobile-call" href="tel:+79381553467">
   <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.72A2 2 0 012 .79h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.53a16 16 0 006.29 6.29l1.1-1.34a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
   Позвонить
+</a>
+
+<!-- WhatsApp floating button -->
+<a id="whatsapp-float" href="https://wa.me/79381553467?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%98%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D1%83%D1%8E%D1%82%20%D0%B2%D0%B0%D1%88%D0%B8%20%D1%83%D1%81%D0%BB%D1%83%D0%B3%D0%B8." target="_blank" rel="noopener" aria-label="Написать в WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
 </a>
 
 <!-- Scroll to top -->
@@ -1969,6 +2427,16 @@
     // фокус на имя
     setTimeout(() => document.getElementById('f-name').focus(), 400);
     showToast('Данные из калькулятора перенесены!');
+  }
+
+  /* ── FAQ TOGGLE ── */
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const wasOpen = item.classList.contains('open');
+    // close all
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    // toggle clicked
+    if (!wasOpen) item.classList.add('open');
   }
 
   /* ── SMOOTH NAV HIGHLIGHT ── */
